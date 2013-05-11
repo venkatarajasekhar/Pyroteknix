@@ -10,6 +10,7 @@
 // |----------------------------------------------------------------------------|
 // |                            Framework Includes                              |
 // |----------------------------------------------------------------------------|
+#include <algorithm>
 #include <stdio.h>
 #include <stdarg.h>
 #include <sps2lib.h>
@@ -46,3 +47,4 @@ const bool DEBUG = true;
 // |                                Functions                             		|
 // |----------------------------------------------------------------------------|
 void Debug(const char * strText, ...);
+float Clamp(float val, float min, float max);

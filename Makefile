@@ -28,6 +28,7 @@ OBJS = 	main.o \
 		Screen.o \
 		Image2D.o \
 		Billboard.o \
+		ParticleSystem.o \
 
 LIBS = -lm -lsps2util
 

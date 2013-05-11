@@ -38,6 +38,7 @@
 #include "GameObject.h"
 #include "Image2D.h"
 #include "Billboard.h"
+#include "ParticleSystem.h"
 
 /*
 	Look at the start of the vcl code to get the positions
@@ -119,19 +120,35 @@ int main(void)
 	cannon->SetModel("cannon");
 	cannon->SetTexture("cannon");
 	
-	Billboard* billboard = new Billboard;
-	billboard->SetModel("quad");
-	billboard->SetTexture("test");
-	billboard->SetPosition(Coord(-100.0f,100.0f,0.0f));
-	
 	// Load in crosshair texture
 	CTexture* crosshairTexture = assetManager.GetRedAlphaTexture("crosshair");
+	
+	Billboard* billboard = new Billboard;
+	billboard->SetModel("quad");
+	billboard->SetTexture(crosshairTexture);
+	billboard->SetPosition(Coord(-100.0f,100.0f,0.0f));
 	
 	// Create crosshair image
 	Image2D* crosshairImage = new Image2D;
 	crosshairImage->Load();
 	crosshairImage->SetTint(0x80,0x00,0x00,0x40);
 	crosshairImage->SetSize(32,32);
+	
+    // Set up particle system
+    ParticleSystem* particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
+	particleSystem->SetModel("quad");
+	particleSystem->SetTexture(crosshairTexture);
+	particleSystem->SetPosition(Coord(-100.0f,100.0f,0.0f));
+    particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleVelocityVariation(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleSpawnFrequency(0.1f);
+    particleSystem->SetParticleDeviation(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleLifetime(10.0f);
+    particleSystem->SetParticleFadeout(5.0f);
+    particleSystem->SetMaxParticles(100);
+    particleSystem->SetTint(1.0f,1.0f,1.0f);
+    particleSystem->SetTintVar(0.5f,0.5f,0.5f);
 	
 	// Terrain to render
 	CTerrain Terrain;
@@ -193,7 +210,12 @@ int main(void)
 		SPS2Manager.BeginScene();
 		
 		// Render Billboard
-		billboard->Render();
+		//billboard->Render();
+		
+		// Render Particles
+		particleSystem->Render();
+		// Process Particle Logic
+		particleSystem->Logic();
 		
 		// Render Model
 		cannon->Render();	

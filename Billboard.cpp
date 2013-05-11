@@ -25,6 +25,9 @@ Billboard::Billboard()
 // |						        Render()									|
 // |----------------------------------------------------------------------------|
 bool Billboard::Render() {
+	Render(m_position);
+}
+bool Billboard::Render(Coord position) {
 	Debug ("Billboard: Render() called.");
 	
 	if (!m_model) 
@@ -39,11 +42,11 @@ bool Billboard::Render() {
 	// Transform matrices to prep for model render
 	Matrix4x4 matWorld, matTrans, matRotX, matRotY;
 	Coord cameraPosition(CPipeline::GetSingleton().GetCameraX(), CPipeline::GetSingleton().GetCameraY(), CPipeline::GetSingleton().GetCameraZ());
-	Coord direction = m_position - cameraPosition;
+	Coord direction = position - cameraPosition;
     float mag = sqrt(direction.x*direction.x + direction.y*direction.y + direction.z*direction.z);
     float yaw = atan2(direction.x,direction.z);
     float pitch = 3.14159265359/2 - acos(-direction.y / mag);
-	matTrans.Translation(m_position.x, m_position.y, m_position.z);
+	matTrans.Translation(position.x, position.y, position.z);
 	matRotX.RotationX(pitch);
 	matRotY.RotationY(yaw);
 	matWorld =  matRotX * matRotY * matTrans;

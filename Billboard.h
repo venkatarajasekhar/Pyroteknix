@@ -32,5 +32,6 @@ public:
 	
     // Sends any models associated with the object to the renderer
     bool virtual Render();
+    bool virtual Render(Coord position);
 
 };

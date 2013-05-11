@@ -340,7 +340,7 @@ void CMs3dModel::InitialiseDMA(bool bTransparent)
 						1,	// EOP
 						1,	// PRE
 						// GS_PRIM(    PRIM, IIP, TME, FGE,  ABE         , AA1, FST, CTXT, FIX)
-						GS_PRIM(GS_TRIANGLE,  1,   1,   0 , bTransparent ,   0,   0,    0,   0),	// PRIM
+						GS_PRIM(GS_TRIANGLE,  1,   1,   0 , true ,   0,   0,    0,   0),	// PRIM
 						GIF_FLG_PACKED,
 						GS_BATCH_3(GIF_REG_ST, GIF_REG_RGBAQ, GIF_REG_XYZ2)));
 	

@@ -36,3 +36,13 @@ void Debug(const char * strText, ...)
 		printf ("\n");
 	}
 }
+
+
+// |----------------------------------------------------------------------------|
+// |                                  Clamp                                     |
+// |----------------------------------------------------------------------------|
+float Clamp(float val, float lowerLimit, float upperLimit)
+{ 
+	using namespace std;
+    return min((max(val,lowerLimit)),upperLimit);
+}
