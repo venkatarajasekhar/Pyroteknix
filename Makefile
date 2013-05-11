@@ -27,6 +27,7 @@ OBJS = 	main.o \
 		GameObject.o \
 		Screen.o \
 		Image2D.o \
+		Billboard.o \
 
 LIBS = -lm -lsps2util
 

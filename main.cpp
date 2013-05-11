@@ -37,6 +37,7 @@
 #include "AssetManager.h"
 #include "GameObject.h"
 #include "Image2D.h"
+#include "Billboard.h"
 
 /*
 	Look at the start of the vcl code to get the positions
@@ -118,6 +119,11 @@ int main(void)
 	cannon->SetModel("cannon");
 	cannon->SetTexture("cannon");
 	
+	Billboard* billboard = new Billboard;
+	billboard->SetModel("quad");
+	billboard->SetTexture("test");
+	billboard->SetPosition(Coord(-100.0f,100.0f,0.0f));
+	
 	// Load in crosshair texture
 	CTexture* crosshairTexture = assetManager.GetRedAlphaTexture("crosshair");
 	
@@ -185,6 +191,9 @@ int main(void)
 		
 		// Prepare scene for rendering	
 		SPS2Manager.BeginScene();
+		
+		// Render Billboard
+		billboard->Render();
 		
 		// Render Model
 		cannon->Render();	
