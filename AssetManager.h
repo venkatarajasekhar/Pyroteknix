@@ -36,7 +36,9 @@ public:
 	void LoadTexture(CTexture* texture, int target=0);
 
     // Getters
-    CTexture* GetTexture(std::string name);
+    CTexture* GetTexture(std::string name, bool blackTransparent = false, bool redAsAlpha = false);
+    CTexture* GetBlackTransparentTexture(std::string name);
+    CTexture* GetRedAlphaTexture(std::string name);
     CMs3dModel* GetModel(std::string name);
 	CFont* GetFont(std::string name);
 
@@ -49,12 +51,15 @@ private:
     //|-----------------------------Private Data Members------------------------|
 
     std::map<std::string,CTexture*> m_textures;
+    std::map<std::string,CTexture*> m_blackTransparentTextures;
+    std::map<std::string,CTexture*> m_redAlphaTextures;
     std::map<std::string,CMs3dModel*> m_models;
     std::map<std::string,CFont*> m_fonts;
 	
 	// Texture Loading
 	CTexture* m_loadedTexture1;
 	CTexture* m_loadedTexture2;
+	CTexture* m_selectedTexture;
 	int m_lastUsed;
 
 };

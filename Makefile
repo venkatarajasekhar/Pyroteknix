@@ -26,6 +26,7 @@ OBJS = 	main.o \
 		Coord.o \
 		GameObject.o \
 		Screen.o \
+		Image2D.o \
 
 LIBS = -lm -lsps2util
 

@@ -36,6 +36,7 @@
 // My includes
 #include "AssetManager.h"
 #include "GameObject.h"
+#include "Image2D.h"
 
 /*
 	Look at the start of the vcl code to get the positions
@@ -118,18 +119,20 @@ int main(void)
 	cannon->SetTexture("cannon");
 	
 	// Load in crosshair texture
-	CTexture* crosshairTexture = assetManager.GetTexture("crosshair");
+	CTexture* crosshairTexture = assetManager.GetRedAlphaTexture("crosshair");
+	
+	// Create crosshair image
+	Image2D* crosshairImage = new Image2D;
+	crosshairImage->Load();
+	crosshairImage->SetTint(0x80,0x00,0x00,0x40);
+	crosshairImage->SetSize(32,32);
 	
 	// Terrain to render
 	CTerrain Terrain;
 	
 	// Load the font bitmap and data
 	CFont* font = assetManager.GetFont("font");
-	CTexture* fontTexture = assetManager.GetTexture("font");
-
-	// Upload these once to VRAM since
-	// they are not going to change
-	//fontTexture->Upload(TEXBUF496);
+	CTexture* fontTexture = assetManager.GetRedAlphaTexture("font");
 	
 	// Set Up Camera --------------------------------------------------------------
 	
@@ -183,6 +186,9 @@ int main(void)
 		// Prepare scene for rendering	
 		SPS2Manager.BeginScene();
 		
+		// Render Model
+		cannon->Render();	
+			
 		// Select the Cross texture
 		//crosshairTexture->Upload(TEXBUF480);
 		//crosshairTexture->Select();
@@ -190,15 +196,11 @@ int main(void)
 			
 			// Render terrain
 			Terrain.SetWorldMatrix(Matrix4x4::IDENTITY);
-			Terrain.Render();	
+			Terrain.Render();
+			
+			// Render crosshair
+			crosshairImage->Render();
 				
-		// Select the model texture	
-		//cannon->GetTexture()->Upload(TEXBUF480);
-		//cannon->GetTexture()->Select();
-		
-			// Render Model
-			cannon->Render();
-		
 		// Select the Font texture	
 		//fontTexture->Select();
 		assetManager.LoadTexture(fontTexture);

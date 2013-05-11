@@ -19,6 +19,7 @@
 AssetManager::AssetManager() :
 	m_loadedTexture1(0),
 	m_loadedTexture2(0),
+	m_selectedTexture(0),
 	m_lastUsed(1)
 {
 }
@@ -48,6 +49,16 @@ void AssetManager::Shutdown()
         delete it->second;
         it->second = 0;
     }
+    for (std::map<string,CTexture*>::iterator it=m_blackTransparentTextures.begin(); it!=m_blackTransparentTextures.end(); ++it)
+    {
+        delete it->second;
+        it->second = 0;
+    }
+    for (std::map<string,CTexture*>::iterator it=m_redAlphaTextures.begin(); it!=m_redAlphaTextures.end(); ++it)
+    {
+        delete it->second;
+        it->second = 0;
+    }
     // De-allocate all models
     for (std::map<string,CMs3dModel*>::iterator it=m_models.begin(); it!=m_models.end(); ++it)
     {
@@ -63,7 +74,10 @@ void AssetManager::Shutdown()
 	
     // Clear maps
     m_textures.clear();
+    m_blackTransparentTextures.clear();
+    m_redAlphaTextures.clear();
     m_models.clear();
+    m_fonts.clear();
     return;
 }
 
@@ -78,13 +92,21 @@ void AssetManager::LoadTexture(CTexture* texture, int target)
 	// If the texture is already loaded somewhere, select it, set it as last used, and return
 	if (texture == m_loadedTexture1)
 	{
-		texture->Select();
+		if (texture != m_selectedTexture)
+		{
+			texture->Select();
+			m_selectedTexture = texture;
+		}
 		m_lastUsed = 1;
 		return;
 	}
 	else if (texture == m_loadedTexture2)
 	{
-		texture->Select();
+		if (texture != m_selectedTexture)
+		{
+			texture->Select();
+			m_selectedTexture = texture;
+		}
 		m_lastUsed = 2;
 		return;
 	}
@@ -101,12 +123,14 @@ void AssetManager::LoadTexture(CTexture* texture, int target)
 	{
 		texture->Upload(TEXBUF480);
 		m_loadedTexture1 = texture;
+		m_selectedTexture = texture;
 		m_lastUsed = 1;
 	}
 	else if (target == 2)
 	{
 		texture->Upload(TEXBUF496);
 		m_loadedTexture2 = texture;
+		m_selectedTexture = texture;
 		m_lastUsed = 2;
 	}
 	texture->Select();
@@ -117,13 +141,23 @@ void AssetManager::LoadTexture(CTexture* texture, int target)
 // |----------------------------------------------------------------------------|
 // |                              GetTexture                                    |
 // |----------------------------------------------------------------------------|
-CTexture* AssetManager::GetTexture(std::string name)
+CTexture* AssetManager::GetTexture(std::string name, bool blackTransparent, bool redAsAlpha)
 {
 	Debug ("AssetManager::GetTexture called.");
     const char* nameC = name.c_str();
 
     // If the texture is already in the map, just return it
-    if (m_textures.count(name)) 
+    if (blackTransparent && m_blackTransparentTextures.count(name)) 
+    {
+	    Debug ("AssetManager: Texture found: %s", nameC);
+        return m_blackTransparentTextures[name];
+    }
+    else if (redAsAlpha && m_redAlphaTextures.count(name)) 
+    {
+	    Debug ("AssetManager: Texture found: %s", nameC);
+        return m_redAlphaTextures[name];
+    }
+    else if (m_textures.count(name)) 
     {
 	    Debug ("AssetManager: Texture found: %s", nameC);
         return m_textures[name];
@@ -138,7 +172,7 @@ CTexture* AssetManager::GetTexture(std::string name)
 
     // Attempt to load
     CTexture* texture = new CTexture;
-    bool result = texture->LoadBitmap(filePathC);
+    bool result = texture->LoadBitmap(filePathC, blackTransparent, redAsAlpha);
     if (!result)
     {
 	    Debug("AssetManager: Unable to load texture: %s", nameC);
@@ -146,9 +180,19 @@ CTexture* AssetManager::GetTexture(std::string name)
     }
 
     // If it was loaded, add it to the map and return it.
-    m_textures[name] = texture;
+    if (blackTransparent) m_blackTransparentTextures[name] = texture;
+    else if (redAsAlpha) m_redAlphaTextures[name] = texture;
+    else m_textures[name] = texture;
 	Debug ("AssetManager: Texture loaded: %s", nameC);
     return texture;
+}
+CTexture* AssetManager::GetBlackTransparentTexture(std::string name)
+{
+	return GetTexture(name, true, false);
+}
+CTexture* AssetManager::GetRedAlphaTexture(std::string name)
+{
+	return GetTexture(name, false, true);
 }
 
 
@@ -222,21 +266,10 @@ CFont* AssetManager::GetFont(std::string name)
     }
 	
 	// Attempt to load font texture
-    filePath = "data/textures/";
-    filePath += name;
-    filePath += ".bmp";
-    const char* texFilePathC = filePath.c_str();
-    CTexture* texture = new CTexture;
-    result = texture->LoadBitmap(texFilePathC, false, true);
-    if (!result)
-    {
-	    Debug("AssetManager: Unable to load font texture: %s", nameC);
-        return m_fonts["default"];
-    }
+    GetRedAlphaTexture(name);
 
     // If it was loaded, add it and its texture to the map and return it.
     m_fonts[name] = font;
-    m_textures[name] = texture;
 	Debug ("AssetManager: Font loaded: %s", nameC);
     return font;
 }
