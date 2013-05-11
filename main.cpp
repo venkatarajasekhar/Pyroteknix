@@ -129,7 +129,7 @@ int main(void)
 
 	// Upload these once to VRAM since
 	// they are not going to change
-	fontTexture->Upload(TEXBUF496);
+	//fontTexture->Upload(TEXBUF496);
 	
 	// Set Up Camera --------------------------------------------------------------
 	
@@ -153,8 +153,8 @@ int main(void)
 		if((pad[0].buttons & PAD_START)&&(pad[0].buttons & PAD_SELECT)) g_bLoop = false;
 		
 		// Rotate the cannon based on user input
-		static float sfRotLocalY = 0.0f;
-		static float sfRotLocalX = 0.0f;
+		float sfRotLocalY = 0.0f;
+		float sfRotLocalX = 0.0f;
 		sfRotLocalY += pad[0].pressures[PAD_PLEFT] * 0.1f;
 		sfRotLocalY -= pad[0].pressures[PAD_PRIGHT] * 0.1f;
 		sfRotLocalX -= pad[0].pressures[PAD_PUP] * 0.1f;
@@ -184,22 +184,24 @@ int main(void)
 		SPS2Manager.BeginScene();
 		
 		// Select the Cross texture
-		crosshairTexture->Upload(TEXBUF480);
-		crosshairTexture->Select();
+		//crosshairTexture->Upload(TEXBUF480);
+		//crosshairTexture->Select();
+		assetManager.LoadTexture(crosshairTexture);
 			
 			// Render terrain
 			Terrain.SetWorldMatrix(Matrix4x4::IDENTITY);
 			Terrain.Render();	
 				
 		// Select the model texture	
-		cannon->GetTexture()->Upload(TEXBUF480);
-		cannon->GetTexture()->Select();
+		//cannon->GetTexture()->Upload(TEXBUF480);
+		//cannon->GetTexture()->Select();
 		
 			// Render Model
 			cannon->Render();
 		
 		// Select the Font texture	
-		fontTexture->Select();
+		//fontTexture->Select();
+		assetManager.LoadTexture(fontTexture);
 		
 			// Render some text
 			font->printfL(  	-300, -240, 127, 127, 127, 127, 
