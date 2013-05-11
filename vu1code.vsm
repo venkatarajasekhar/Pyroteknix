@@ -1,0 +1,70 @@
+; === (null)
+; =================================================
+; flowMon::Emit() vcl 1.4beta7 produced this code:
+		.vu
+		.align 4
+START:
+; _LNOPT_w=[ normal2 ] 9 [9 0] 9   [START]
+         NOP                                                        fcset         0                                   
+         NOP                                                        lq            VF01,9(VI00)                        
+         NOP                                                        lq            VF02,10(VI00)                       
+         NOP                                                        lq            VF03,11(VI00)                       
+         NOP                                                        lq            VF04,12(VI00)                       
+         NOP                                                        lq.xyz        VF05,13(VI00)                       
+         NOP                                                        lq.xyz        VF06,14(VI00)                       
+         NOP                                                        lq.xyz        VF07,15(VI00)                       
+         NOP                                                        lq.xyz        VF08,0(VI00)                        
+begin:
+; _LNOPT_w=[ normal2 ] 4 [6 0] 6   [begin]
+         NOP                                                        xtop          VI02                                
+         NOP                                                        ilw.x         VI03,0(VI02)                        
+         NOP                                                        iaddiu        VI04,VI02,0                         
+         NOP                                                        iadd          VI03,VI03,VI02                             ;	STALL_LATENCY ?2
+loop:
+; _LNOPT_w=[ vuta1 ] 31 [36 24] 38   [loop]
+         NOP                                                        lq.xyz        VF10,3(VI04)                        
+         NOP                                                        lq            VF09,4(VI04)                        
+         mulax.xyz     ACC,VF05,VF10x                               NOP                                                      ;	STALL_LATENCY ?2
+         madday.xyz    ACC,VF06,VF10y                               NOP                                               
+         maddz.xyz     VF10,VF07,VF10z                              NOP                                               
+         mulax         ACC,VF01,VF09x                               NOP                                               
+         madday        ACC,VF02,VF09y                               lq.xyz        VF12,1(VI00)                        
+         maddaz        ACC,VF03,VF09z                               lq.xyz        VF14,2(VI00)                        
+         maddw         VF09,VF04,VF09w                              lq.xyz        VF11,3(VI00)                        
+         mulax.xyz     ACC,VF12,VF10x                               NOP                                                      ;	STALL_LATENCY ?1
+         madday.xyz    ACC,VF14,VF10y                               NOP                                               
+         maddz.xyz     VF11,VF11,VF10z                              div           Q,VF00w,VF09w                       
+         miniw.xyz     VF14,VF11,VF00w                              NOP                                                      ;	STALL_LATENCY ?3
+         clipw.xyz     VF09xyz,VF09w                                NOP                                               
+         mulaw.xyz     ACC,VF08,VF00w                               lq            VF10,2(VI04)                        
+         mulq.xyz      VF11,VF09,Q                                  loi           0x43000000                          
+         maxx.xyz      VF09,VF14,VF00x                              lq.xyz        VF15,5(VI00)                        
+         addi.w        VF09,VF00,I                                  lq.xyz        VF13,6(VI00)                        
+         mulq          VF14,VF10,Q                                  lq.xyz        VF12,7(VI00)                        
+         madd.xyz      VF10,VF11,VF08                               lq.xyz        VF11,8(VI00)                        
+         mulax.xyz     ACC,VF15,VF09x                               fcand         VI01,262143                         
+         madday.xyz    ACC,VF13,VF09y                               NOP                                               
+         maddaz.xyz    ACC,VF12,VF09z                               ilw.w         VI05,2(VI04)                        
+         maddw.xyz     VF09,VF11,VF00w                              iaddiu        VI04,VI04,0x00000003                
+         ftoi4.xyz     VF10,VF10                                    iaddiu        VI01,VI01,0x00007fff                
+         NOP                                                        iadd          VI05,VI01,VI05                             ;	STALL_LATENCY ?1
+         ftoi0         VF09,VF09                                    isw.w         VI05,248(VI04)                      
+         NOP                                                        sq            VF14,246(VI04)                      
+         NOP                                                        sq.xyz        VF10,248(VI04)                      
+         NOP                                                        ibne          VI04,VI03,loop                      
+         NOP                                                        sq            VF09,247(VI04)                      
+; _LNOPT_w=[ normal2 ] 6 [5 0] 8   [__v_vu1code_vcl_7]
+         NOP                                                        lq            VF09,1(VI02)                        
+         NOP                                                        iaddiu        VI01,VI02,0x000000f8                
+         NOP                                                        sq            VF09,248(VI02)                             ;	STALL_LATENCY ?2
+         NOP                                                        xgkick        VI01                                
+         NOP[E]                                                     NOP                                               
+         NOP                                                        NOP                                               
+; _LNOPT_w=[ normal2 ] 2 [2 0] 2   [__v_vu1code_vcl_8]
+         NOP                                                        b             begin                               
+         NOP                                                        NOP                                               
+		.align 4
+;	iCount=52
+; register stats:
+;   6 VU User integer
+;  16 VU User floating point
