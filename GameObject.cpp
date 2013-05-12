@@ -76,7 +76,7 @@ bool GameObject::Render() {
 	matRotY.RotationY(m_orientation.y);
 	matRotZ.RotationZ(m_orientation.z);
 	// TODO: Change to Yaw, Pitch, Roll when cannon has own class (cannon must be pitch, then yaw)
-	matWorld = matTrans * matRotX * matRotY * matRotZ;
+	matWorld =  matRotX * matRotY * matRotZ * matTrans;
 	
 	// Render Model
 	m_model->SetWorldMatrix(matWorld);

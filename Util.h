@@ -38,7 +38,7 @@
 // |----------------------------------------------------------------------------|
 // |                                Constants                                   |
 // |----------------------------------------------------------------------------|
-enum SCREEN {SCREEN_TITLE, SCREEN_LEVEL, NUM_SCREENS, 
+enum SCREEN {SCREEN_TITLE, NUM_SCREENS, SCREEN_LEVEL,  
     SCREEN_QUIT};
 const bool DEBUG = true;
 

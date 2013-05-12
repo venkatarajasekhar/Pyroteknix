@@ -83,11 +83,13 @@ void AssetManager::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                              Shutdown                                      |
+// |                              LoadTexture                                   |
 // |----------------------------------------------------------------------------|
 void AssetManager::LoadTexture(CTexture* texture, int target)
 {
 	Debug ("AssetManager::LoadTexture called.");
+	
+	if (!texture) return;
 	
 	// If the texture is already loaded somewhere, select it, set it as last used, and return
 	if (texture == m_loadedTexture1)

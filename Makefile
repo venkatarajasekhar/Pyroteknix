@@ -26,9 +26,12 @@ OBJS = 	main.o \
 		Coord.o \
 		GameObject.o \
 		Screen.o \
+		TitleScreen.o \
 		Image2D.o \
 		Billboard.o \
 		ParticleSystem.o \
+		GameManager.o \
+		Text.o \
 
 LIBS = -lm -lsps2util
 

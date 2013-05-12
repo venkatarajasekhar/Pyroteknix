@@ -39,6 +39,8 @@
 #include "Image2D.h"
 #include "Billboard.h"
 #include "ParticleSystem.h"
+#include "TitleScreen.h"
+#include "GameManager.h"
 
 /*
 	Look at the start of the vcl code to get the positions
@@ -109,66 +111,31 @@ int main(void)
 	// Set up the DMA packet to clear the screen. We want to clear to blue.
 	SPS2Manager.InitScreenClear(0, 0x25, 0x50);
 	
+	// Set Up Camera --------------------------------------------------------------
+	
+	Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
+	
 	// Load in texture and models ----------------------------------------------
 	
 	// Set up asset loader
 	AssetManager assetManager;
 	assetManager.Initialize();
 	
-	// Create game object for cannon
-	GameObject* cannon = new GameObject;
-	cannon->SetModel("cannon");
-	cannon->SetTexture("cannon");
+	// Set up game manager
+	GameManager* gameManager = new GameManager;
+	gameManager->Initialize();
 	
-	// Load in crosshair texture
-	CTexture* crosshairTexture = assetManager.GetRedAlphaTexture("crosshair");
-	
-	Billboard* billboard = new Billboard;
-	billboard->SetModel("quad");
-	billboard->SetTexture(crosshairTexture);
-	billboard->SetPosition(Coord(-100.0f,100.0f,0.0f));
-	
-	// Create crosshair image
-	Image2D* crosshairImage = new Image2D;
-	crosshairImage->Load();
-	crosshairImage->SetTint(0x80,0x00,0x00,0x40);
-	crosshairImage->SetSize(32,32);
-	
-    // Set up particle system
-    ParticleSystem* particleSystem = new ParticleSystem;
-    particleSystem->Initialize();
-	particleSystem->SetModel("quad");
-	particleSystem->SetTexture(crosshairTexture);
-	particleSystem->SetPosition(Coord(-100.0f,100.0f,0.0f));
-    particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
-    particleSystem->SetParticleVelocityVariation(Coord(0.0f,0.0f,0.0f));
-    particleSystem->SetParticleSpawnFrequency(0.1f);
-    particleSystem->SetParticleDeviation(Coord(0.0f,0.0f,0.0f));
-    particleSystem->SetParticleLifetime(10.0f);
-    particleSystem->SetParticleFadeout(5.0f);
-    particleSystem->SetMaxParticles(100);
-    particleSystem->SetTint(1.0f,1.0f,1.0f);
-    particleSystem->SetTintVar(0.5f,0.5f,0.5f);
-	
-	// Terrain to render
-	CTerrain Terrain;
+	// // Set up Title Screen
+	// TitleScreen* titleScreen = new TitleScreen;
+	// titleScreen->Initialize();
 	
 	// Load the font bitmap and data
-	CFont* font = assetManager.GetFont("font");
-	CTexture* fontTexture = assetManager.GetRedAlphaTexture("font");
-	
-	// Set Up Camera --------------------------------------------------------------
-	
-	Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
-
-	int Frame = 0;
-	float fps = 0.0f;
+	// TODO: Text game object, rendered at overlay stage in scene
+	// TODO: Image game object, rendered at overlay stage in scene
 		
 	// The main Render loop -------------------------------------------------------
 	while(g_bLoop)
 	{
-		//start the time
-  		Timer.PrimeTimer();
   		
 		VIFDynamicDMA.Fire();
 		
@@ -178,82 +145,45 @@ int main(void)
 		// Check for exit condition
 		if((pad[0].buttons & PAD_START)&&(pad[0].buttons & PAD_SELECT)) g_bLoop = false;
 		
-		// Rotate the cannon based on user input
-		float sfRotLocalY = 0.0f;
-		float sfRotLocalX = 0.0f;
-		sfRotLocalY += pad[0].pressures[PAD_PLEFT] * 0.1f;
-		sfRotLocalY -= pad[0].pressures[PAD_PRIGHT] * 0.1f;
-		sfRotLocalX -= pad[0].pressures[PAD_PUP] * 0.1f;
-		sfRotLocalX += pad[0].pressures[PAD_PDOWN] * 0.1f;
-		cannon->SetOrientation(cannon->GetOrientation()+Coord(sfRotLocalX,sfRotLocalY,0.0f));
+		// // Rotate the cannon based on user input
+		// float sfRotLocalY = 0.0f;
+		// float sfRotLocalX = 0.0f;
+		// sfRotLocalY += pad[0].pressures[PAD_PLEFT] * 0.1f;
+		// sfRotLocalY -= pad[0].pressures[PAD_PRIGHT] * 0.1f;
+		// sfRotLocalX -= pad[0].pressures[PAD_PUP] * 0.1f;
+		// sfRotLocalX += pad[0].pressures[PAD_PDOWN] * 0.1f;
+		// cannon->SetOrientation(cannon->GetOrientation()+Coord(sfRotLocalX,sfRotLocalY,0.0f));
 		
+		// THESE WILL BE DONE DURING LOGIC()
 		// Get any camera movements
 		// Get any requested translations
 		float Strafe =   pad[0].axes[PAD_AXIS_LX];
 		float Advance =  pad[0].axes[PAD_AXIS_LY];
 		float UpDown =   (pad[0].pressures[PAD_PL1] - pad[0].pressures[PAD_PL2]);
-		
 		// Get requested rotations
 		float YRot = pad[0].axes[PAD_AXIS_RY];
 		float XRot = pad[0].axes[PAD_AXIS_RX];
-				
 		// Reset camera to default position if requested
 		if(pad[0].buttons & PAD_R3)
 		{
 			Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
 		}
-		
 		// Update the Camera and viewProjection matrices
 		Pipeline.Update(Strafe, Advance, UpDown, YRot, XRot);
 		
-		// Prepare scene for rendering	
-		SPS2Manager.BeginScene();
+		// Run Title Screen logic and render functions
+		gameManager->Logic();
+		gameManager->Render();
 		
-		// Render Billboard
-		//billboard->Render();
-		
-		// Render Particles
-		particleSystem->Render();
-		// Process Particle Logic
-		particleSystem->Logic();
-		
-		// Render Model
-		cannon->Render();	
-			
-		// Select the Cross texture
-		//crosshairTexture->Upload(TEXBUF480);
-		//crosshairTexture->Select();
-		assetManager.LoadTexture(crosshairTexture);
-			
-			// Render terrain
-			Terrain.SetWorldMatrix(Matrix4x4::IDENTITY);
-			Terrain.Render();
-			
-			// Render crosshair
-			crosshairImage->Render();
-				
-		// Select the Font texture	
-		//fontTexture->Select();
-		assetManager.LoadTexture(fontTexture);
-		
-			// Render some text
-			font->printfL(  	-300, -240, 127, 127, 127, 127, 
-							"Camera Position (x, y, z) = (%3.1f, %3.1f, %3.1f)", 
-							Pipeline.GetCameraX(), Pipeline.GetCameraY(), Pipeline.GetCameraZ());
-			font->printfL(  	-300, -210, 127, 127, 127, 127, 
-							"Camera Rotation in Degrees (XRot, YRot) = (%3.1f, %3.1f)", 
-							RadToDeg(Pipeline.GetCameraXRot()), RadToDeg(Pipeline.GetCameraYRot()));
-			font->printfC(  200, -240, 127, 127, 127, 127, "Frame: %d\nFPS: %.1f" , Frame++, fps);
-					
-		//calculate the current frame rate in frames per second	
-		fps = Timer.GetFPS();
-		
-		SPS2Manager.EndScene();	
-		
+		// Dump screenshot if requested
 		if(pad[0].pressed & PAD_TRI)SPS2Manager.ScreenShot();		
 	}
 
+	// Shutdown control pad
 	pad_cleanup(PAD_0);
+	
+	// Shutdown game manager
+	gameManager->Shutdown();
 	
 	// Shutdown asset manager
 	assetManager.Shutdown();
