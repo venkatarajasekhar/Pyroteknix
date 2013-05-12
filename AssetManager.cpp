@@ -43,6 +43,8 @@ bool AssetManager::Initialize()
 // |----------------------------------------------------------------------------|
 void AssetManager::Shutdown()
 {
+	Debug ("AssetManager::Shutdown called.");
+	
     // De-allocate all textures
     for (std::map<string,CTexture*>::iterator it=m_textures.begin(); it!=m_textures.end(); ++it)
     {
@@ -78,6 +80,9 @@ void AssetManager::Shutdown()
     m_redAlphaTextures.clear();
     m_models.clear();
     m_fonts.clear();
+	
+	Debug ("AssetManager: object shut down.");
+	
     return;
 }
 

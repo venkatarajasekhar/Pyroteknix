@@ -67,18 +67,25 @@ bool GameManager::Initialize()
 // |----------------------------------------------------------------------------|
 void GameManager::Shutdown()
 {
+	Debug ("GameManager::Shutdown called.");
 
     // Screen Cleanup
     if (m_screens) {
         for (int i = 0 ; i < NUM_SCREENS; ++i) {
-            m_screens[i]->Shutdown();
-            delete m_screens[i];
+			if (m_screens[i])
+			{
+				m_screens[i]->Shutdown();
+				delete m_screens[i];
+				m_screens[i]= 0;
+			}
         }
         delete[] m_screens;
         m_screens = 0;
     }
     m_currentScreen = 0;
 
+	Debug ("GameManager: Object shut down.");
+	
     return;
 }
 

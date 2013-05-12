@@ -31,6 +31,7 @@ OBJS = 	main.o \
 		Image2D.o \
 		Billboard.o \
 		ParticleSystem.o \
+		FireworkEffect.o \
 		GameManager.o \
 		Text.o \
 

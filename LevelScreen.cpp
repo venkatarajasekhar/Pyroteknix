@@ -17,7 +17,9 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 LevelScreen::LevelScreen() :
-    Screen()
+    Screen(),
+	m_explode(false),
+	fireworkEffect(0)
 {
 	Debug ("LevelScreen: object instantiated.");
 }
@@ -61,6 +63,18 @@ bool LevelScreen::Initialize() {
 	base->SetTexture("base");
 	base->SetPosition(Coord(0.0f,0.0f,0.0f));
 	m_gameObjects.push_back(base);
+	
+	// Create FireworkEffect for testing
+	fireworkEffect = new FireworkEffect;
+	fireworkEffect->SetModel("base");
+	fireworkEffect->SetTexture("base");
+	fireworkEffect->SetPosition(Coord(0.0f,100.0f,0.0f));
+	fireworkEffect->SetInitialSpeed(100.0f);
+	fireworkEffect->SetParticleDrag(0.9f);
+	fireworkEffect->SetParticleLifetime(3.0f);
+	fireworkEffect->SetParticleFadeout(1.0f);
+	fireworkEffect->SetMaxParticles(20);
+	m_gameObjects.push_back(fireworkEffect);
 
 	Debug ("LevelScreen: object initialized.");
 	return true;
@@ -71,6 +85,10 @@ bool LevelScreen::Initialize() {
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
 bool LevelScreen::Shutdown() {
+	Debug ("LevelScreen::Shutdown called.");
+	
+	fireworkEffect->Shutdown();
+	
 	Screen::Shutdown();
 	
 	Debug ("LevelScreen: object shutdown.");
@@ -85,6 +103,9 @@ bool LevelScreen::Logic() {
 	Debug ("LevelScreen::Logic() called.");
 
     Screen::Logic();
+	
+	//if (!m_explode)
+	//	fireworkEffect->Explode();
 	
 	return true;
 }

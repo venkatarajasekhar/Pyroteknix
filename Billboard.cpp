@@ -16,7 +16,8 @@
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-Billboard::Billboard()
+Billboard::Billboard() :
+	GameObject()
 {
 	Debug("Billboard: object instantiated.");
 }

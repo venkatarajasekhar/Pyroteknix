@@ -80,6 +80,7 @@ bool TitleScreen::Initialize() {
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
 bool TitleScreen::Shutdown() {
+	Debug ("TitleScreen::Shutdown called.");
 	Screen::Shutdown();
 	
 	Debug ("TitleScreen: object shutdown.");

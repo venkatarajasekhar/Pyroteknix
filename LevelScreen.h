@@ -13,6 +13,7 @@
 // |----------------------------------------------------------------------------|
 #include "Util.h"
 #include "Screen.h"
+#include "FireworkEffect.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -48,5 +49,7 @@ public:
 protected:
     
     //|----------------------------Protected Data Members-----------------------|
+	bool m_explode;
+	FireworkEffect* fireworkEffect;
     
 };

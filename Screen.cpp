@@ -37,6 +37,7 @@ bool Screen::Initialize() {
 	m_font = AssetManager::GetSingleton().GetFont("defaultFont");
 	m_fontTexture = AssetManager::GetSingleton().GetRedAlphaTexture("defaultFont");
 		
+	Debug ("Screen: object initialized.");
     return true;
 }
 
@@ -46,6 +47,7 @@ bool Screen::Initialize() {
 // |----------------------------------------------------------------------------|
 bool Screen::Shutdown() 
 {
+	Debug ("Screen::Shutdown called.");
     bool result = true;
     
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
@@ -58,6 +60,7 @@ bool Screen::Shutdown()
          delete (*it);
     m_overlayObjects.clear();
 
+	Debug ("Screen: object shutdown.");
     return result;
 }
 
