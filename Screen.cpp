@@ -103,6 +103,13 @@ bool Screen::Logic()
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
          result = result && (*it)->Logic();
 	
+	// Check for exit state
+	if((pad[0].buttons & PAD_START)&&(pad[0].buttons & PAD_SELECT))
+	{
+		m_done = true;
+		m_nextScreen = SCREEN_QUIT;
+	}
+	
     return result;
 }
 
@@ -113,9 +120,6 @@ bool Screen::Logic()
 bool Screen::Render()
 { 
     bool result = true;
-	
-	// Prepare scene for rendering	
-	SPS2Manager.BeginScene();
 
     // Draw Background objects
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
@@ -140,9 +144,6 @@ bool Screen::Render()
 							"Camera Rotation in Degrees (XRot, YRot) = (%3.1f, %3.1f)", 
 							RadToDeg(CPipeline::GetSingleton().GetCameraXRot()), RadToDeg(CPipeline::GetSingleton().GetCameraYRot()));
 			m_font->printfC(  200, -240, 127, 127, 127, 127, "Frame: %d\nFPS: %.1f" , m_frame++, m_fps);
-
-		// End the scene
-		SPS2Manager.EndScene();	
 		
 		//calculate the current frame rate in frames per second	
 		m_fps = m_timer.GetFPS();

@@ -27,6 +27,7 @@ OBJS = 	main.o \
 		GameObject.o \
 		Screen.o \
 		TitleScreen.o \
+		LevelScreen.o \
 		Image2D.o \
 		Billboard.o \
 		ParticleSystem.o \

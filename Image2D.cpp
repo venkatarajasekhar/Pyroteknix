@@ -46,26 +46,7 @@ void Image2D::Render()
 
 	// Start DIRECT mode transfer
 	VIFDynamicDMA.StartDirect();
-	
-	// Font Mode
-	// VIFDynamicDMA.StartAD();
-	// VIFDynamicDMA.AddAD(RGBAQ_SET(127,0,0,127,0), RGBAQ);
-	// VIFDynamicDMA.AddAD(GS_PRIM(GS_SPRITE, 0, 1, 0, 1, 0, 1, 0, 0), PRIM);
-	// VIFDynamicDMA.EndAD();
-
-	// VIFDynamicDMA.Add128(GS_GIFTAG_BATCH(1, 1, 0, 0, GIF_FLG_REGLIST, GS_BATCH_4(GIF_REG_UV,
-						 // GIF_REG_XYZ2, GIF_REG_UV, GIF_REG_XYZ2)));
-	
-	// VIFDynamicDMA.Add64(UV_SET(0, 0));
-	// VIFDynamicDMA.Add64(XYZ2_SET(((left + 2048) << 4) - 8,
-								 // ((top  + 2048) << 4) - 8,
-								 // m_depth));
-	// VIFDynamicDMA.Add64(UV_SET(255, 255));
-	// VIFDynamicDMA.Add64(XYZ2_SET(((right  + 2048) << 4) - 8,
-								 // ((bottom + 2048) << 4) - 8,
-								 // m_depth));
-					
-	// 2D Sprite Mode					
+									
 	// Add the GIFTag
 	VIFDynamicDMA.Add128(GS_GIFTAG_BATCH(	1,							// NLOOP
 											1,							// EOP

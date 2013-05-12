@@ -142,9 +142,7 @@ int main(void)
 		// Update Control Pad
 		pad_update(PAD_0);
 		
-		// Check for exit condition
-		if((pad[0].buttons & PAD_START)&&(pad[0].buttons & PAD_SELECT)) g_bLoop = false;
-		
+		// THESE WILL BE DONE DURING LOGIC()
 		// // Rotate the cannon based on user input
 		// float sfRotLocalY = 0.0f;
 		// float sfRotLocalX = 0.0f;
@@ -153,8 +151,6 @@ int main(void)
 		// sfRotLocalX -= pad[0].pressures[PAD_PUP] * 0.1f;
 		// sfRotLocalX += pad[0].pressures[PAD_PDOWN] * 0.1f;
 		// cannon->SetOrientation(cannon->GetOrientation()+Coord(sfRotLocalX,sfRotLocalY,0.0f));
-		
-		// THESE WILL BE DONE DURING LOGIC()
 		// Get any camera movements
 		// Get any requested translations
 		float Strafe =   pad[0].axes[PAD_AXIS_LX];
@@ -171,12 +167,16 @@ int main(void)
 		// Update the Camera and viewProjection matrices
 		Pipeline.Update(Strafe, Advance, UpDown, YRot, XRot);
 		
-		// Run Title Screen logic and render functions
-		gameManager->Logic();
+		// Logic
+		g_bLoop = gameManager->Logic();
+	
+		// Render scene
+		SPS2Manager.BeginScene();
 		gameManager->Render();
+		SPS2Manager.EndScene();	
 		
 		// Dump screenshot if requested
-		if(pad[0].pressed & PAD_TRI)SPS2Manager.ScreenShot();		
+		//if(pad[0].pressed & PAD_TRI)SPS2Manager.ScreenShot();		
 	}
 
 	// Shutdown control pad

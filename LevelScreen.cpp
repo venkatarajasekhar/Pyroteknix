@@ -3,49 +3,47 @@
 // Based on framework by Dr. Henry Fortuna
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TitleScreen
-//      Splash screen shown at the start of the game
+// LevelScreen
+//      Screen containing a game level
 
 
 // |----------------------------------------------------------------------------|
 // |								Includes									|
 // |----------------------------------------------------------------------------|
-#include "TitleScreen.h"
+#include "LevelScreen.h"
 
 
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-TitleScreen::TitleScreen() :
-	m_titleTextTexture(0),
-	m_titleTextImage(0),
+LevelScreen::LevelScreen() :
     Screen()
 {
-	Debug ("TitleScreen: object instantiated.");
+	Debug ("LevelScreen: object instantiated.");
 }
      
 
 // |----------------------------------------------------------------------------|
 // |							  Copy Constructor								|
 // |----------------------------------------------------------------------------|
-TitleScreen::TitleScreen(const TitleScreen&) {
-	Debug ("TitleScreen: object copied.");
+LevelScreen::LevelScreen(const LevelScreen&) {
+	Debug ("LevelScreen: object copied.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Destructor									|
 // |----------------------------------------------------------------------------|
-TitleScreen::~TitleScreen() {
-	Debug ("TitleScreen: object destroyed.");
+LevelScreen::~LevelScreen() {
+	Debug ("LevelScreen: object destroyed.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Initialize									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Initialize() {
-	Debug ("TitleScreen::Initialize() called.");
+bool LevelScreen::Initialize() {
+	Debug ("LevelScreen::Initialize() called.");
 
     // Initialize parent class
     Screen::Initialize();
@@ -63,15 +61,8 @@ bool TitleScreen::Initialize() {
 	base->SetTexture("base");
 	base->SetPosition(Coord(0.0f,0.0f,0.0f));
 	m_gameObjects.push_back(base);
-	
-	// Set up Title image
-	m_titleTextTexture = AssetManager::GetSingleton().GetRedAlphaTexture("titleText");
-	m_titleTextImage = new Image2D;
-	m_titleTextImage->SetWidth(512);
-	m_titleTextImage->SetHeight(512);
-	m_titleTextImage->SetDepth(0x00000F);
 
-	Debug ("TitleScreen: object initialized.");
+	Debug ("LevelScreen: object initialized.");
 	return true;
 }
 
@@ -79,10 +70,10 @@ bool TitleScreen::Initialize() {
 // |----------------------------------------------------------------------------|
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Shutdown() {
+bool LevelScreen::Shutdown() {
 	Screen::Shutdown();
 	
-	Debug ("TitleScreen: object shutdown.");
+	Debug ("LevelScreen: object shutdown.");
 	return true;
 }
 
@@ -90,15 +81,8 @@ bool TitleScreen::Shutdown() {
 // |----------------------------------------------------------------------------|
 // |							     Logic()									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Logic() {
-	Debug ("TitleScreen::Logic() called.");
-	
-	// Check for move to next screen
-	if((pad[0].buttons & PAD_TRI) || (pad[0].buttons & PAD_CROSS) || (pad[0].buttons & PAD_SQUARE) || (pad[0].buttons & PAD_CIRCLE))
-	{
-		m_done = true;
-		m_nextScreen = SCREEN_LEVEL;
-	}
+bool LevelScreen::Logic() {
+	Debug ("LevelScreen::Logic() called.");
 
     Screen::Logic();
 	
@@ -108,14 +92,8 @@ bool TitleScreen::Logic() {
 // |----------------------------------------------------------------------------|
 // |							    Render()									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Render() {
-	Debug ("TitleScreen::Render() called.");
-	
-	// Place texture in buffer (as needed)
-	AssetManager::GetSingleton().LoadTexture(m_titleTextTexture);
-	
-	// Render title image
-	m_titleTextImage->Render();
+bool LevelScreen::Render() {
+	Debug ("LevelScreen::Render() called.");
 
     Screen::Render();
 
@@ -126,8 +104,8 @@ bool TitleScreen::Render() {
 // |							    OnLoad()									|
 // |----------------------------------------------------------------------------|
 // Called when the screen is loaded.
-bool TitleScreen::OnLoad() {
-	Debug("TitleScreen::OnLoad called");
+bool LevelScreen::OnLoad() {
+	Debug("LevelScreen::OnLoad called");
 	Screen::OnLoad();
 	
 	// Set Camera Position
@@ -139,8 +117,8 @@ bool TitleScreen::OnLoad() {
 // |----------------------------------------------------------------------------|
 // |							    OnExit()									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::OnExit() {
-	Debug("TitleScreen::OnExit called.");
+bool LevelScreen::OnExit() {
+	Debug("LevelScreen::OnExit called.");
 
 	return true;
 }

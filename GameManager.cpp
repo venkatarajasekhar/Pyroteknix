@@ -53,8 +53,8 @@ bool GameManager::Initialize()
     }
     m_screens[SCREEN_TITLE] = new TitleScreen();
     m_screens[SCREEN_TITLE]->Initialize();
-    // m_screens[SCREEN_LEVEL] = new LevelScreen();
-    // m_screens[SCREEN_LEVEL]->Initialize();
+    m_screens[SCREEN_LEVEL] = new LevelScreen();
+    m_screens[SCREEN_LEVEL]->Initialize();
     m_currentScreen = m_screens[SCREEN_TITLE];
     result = m_currentScreen->OnLoad();
 
@@ -101,7 +101,7 @@ bool GameManager::Logic()
         // Check if the screen is telling the game to quit.
         if (m_currentScreen->GetNextScreen() == SCREEN_QUIT) {
             // If so, quit.
-            return true;
+            return false;
         }
 
         // If the screen is NOT telling the game to quit, load the next screen
