@@ -33,6 +33,7 @@ ParticleSystem::ParticleSystem() :
     m_particleFadeout(0),
     m_particleLifetime(0),
     m_maxParticles(0),
+	m_spawnParticles(true),
     m_accumulatedTime(0.0f),
     m_frameTime(0.0f),
     m_particles(0),
@@ -104,6 +105,9 @@ bool ParticleSystem::Logic() {
 	m_accumulatedTime += m_frameTime;
 	Debug ("ParticleSystem: m_accumulatedTime = %f",m_accumulatedTime);
     
+	// Move position based on velocity
+	m_position += m_linearVelocity * (1.0f / 40.0f);
+	
 	// Emit new particles.
 	EmitParticles();
 	
@@ -153,7 +157,7 @@ void ParticleSystem::EmitParticles() {
 	}
     else return;
     
-	if((emitParticle == true) && (m_particles.size() < (m_maxParticles - 1)))
+	if((emitParticle == true) && (m_particles.size() < (m_maxParticles - 1)) && m_spawnParticles)
     {
 	    Debug ("ParticleSystem: Emitting Particle. --------------------------------------------------------------------");
 

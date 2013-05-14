@@ -17,7 +17,8 @@
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-GameObject::GameObject()
+GameObject::GameObject() :
+	m_scale(1.0f)
 {
 	Debug("GameObject: object instantiated.");
 }
@@ -70,13 +71,14 @@ bool GameObject::Render() {
 	AssetManager::GetSingleton().LoadTexture(m_texture);
 	
 	// Transform matrices to prep for model render
-	Matrix4x4 matWorld, matTrans, matRotX, matRotY, matRotZ;
+	Matrix4x4 matWorld, matTrans, matRotX, matRotY, matRotZ, matScale;
 	matTrans.Translation(m_position.x, m_position.y, m_position.z);
+	matScale.Scaling(m_scale);
 	matRotX.RotationX(m_orientation.x);
 	matRotY.RotationY(m_orientation.y);
 	matRotZ.RotationZ(m_orientation.z);
 	// TODO: Change to Yaw, Pitch, Roll when cannon has own class (cannon must be pitch, then yaw)
-	matWorld =  matRotX * matRotY * matRotZ * matTrans;
+	matWorld =  matScale * matRotX * matRotY * matRotZ * matTrans;
 	
 	// Render Model
 	m_model->SetWorldMatrix(matWorld);

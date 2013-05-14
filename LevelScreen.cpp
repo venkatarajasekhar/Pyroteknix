@@ -20,9 +20,7 @@ LevelScreen::LevelScreen() :
     Screen(),
 	m_crosshair(0),
 	m_aimSpeed(10),
-	m_cannon(0),
-	m_explode(false),
-	fireworkEffect(0)
+	m_cannon(0)
 {
 	Debug ("LevelScreen: object instantiated.");
 }
@@ -80,17 +78,38 @@ bool LevelScreen::Initialize() {
 	m_crosshair->SetTint(0x80,0x00,0x00,0x80);
 	m_overlayObjects.push_back(m_crosshair);
 	
-	// Create FireworkEffect for testing
-	fireworkEffect = new FireworkEffect;
-	fireworkEffect->SetModel("quad");
-	fireworkEffect->SetTexture("particle_point");
-	fireworkEffect->SetPosition(Coord(0.0f,300.0f,0.0f));
-	fireworkEffect->SetInitialSpeed(100.0f);
-	fireworkEffect->SetParticleDrag(0.2f);
-	fireworkEffect->SetParticleLifetime(3.0f);
-	fireworkEffect->SetParticleFadeout(1.0f);
-	fireworkEffect->SetMaxParticles(20);
-	m_gameObjects.push_back(fireworkEffect);
+	// Firework TEST
+	Firework* firework = new Firework;
+	firework->Initialize();
+	firework->SetTarget(Coord(0.0f,300.0f,-150.0f));
+	m_gameObjects.push_back(firework);
+	
+	
+	// // Create streaming particle effect for testing
+	// ParticleSystem* particles = new ParticleSystem;
+	// particles->SetModel("quad");
+	// particles->SetTexture("particle_point");
+	// particles->SetPosition(Coord(0.0f,0.0f,0.0f));
+	// particles->SetLinearVelocity(Coord(0.0f,100.0f,-50.0f));
+	// particles->SetParticleVelocityVariation(Coord(30.0f,30.0f,30.0f));
+	// particles->SetParticleSpawnFrequency(0.1f);
+	// particles->SetParticleLifetime(1.0f);
+	// particles->SetParticleFadeout(0.3f);
+	// particles->SetMaxParticles(20);
+	// //particles->SetScale(5.0f);
+	// m_gameObjects.push_back(particles);
+	
+	// // Create FireworkEffect for testing
+	// fireworkEffect = new FireworkEffect;
+	// fireworkEffect->SetModel("quad");
+	// fireworkEffect->SetTexture("particle_point");
+	// fireworkEffect->SetPosition(Coord(0.0f,300.0f,0.0f));
+	// fireworkEffect->SetInitialSpeed(100.0f);
+	// fireworkEffect->SetParticleDrag(0.2f);
+	// fireworkEffect->SetParticleLifetime(3.0f);
+	// fireworkEffect->SetParticleFadeout(1.0f);
+	// fireworkEffect->SetMaxParticles(20);
+	// m_gameObjects.push_back(fireworkEffect);
 
 	Debug ("LevelScreen: object initialized.");
 	return true;
@@ -102,9 +121,6 @@ bool LevelScreen::Initialize() {
 // |----------------------------------------------------------------------------|
 bool LevelScreen::Shutdown() {
 	Debug ("LevelScreen::Shutdown called.");
-	
-	// TEMP
-	fireworkEffect->Shutdown();
 	
 	Screen::Shutdown();
 	
@@ -120,13 +136,6 @@ bool LevelScreen::Logic() {
 	Debug ("LevelScreen::Logic() called.");
 
     Screen::Logic();
-	
-	// TEMP
-	if (!m_explode)
-	{
-		fireworkEffect->Explode();
-		m_explode = true;
-	}
 	
 	// Move crosshair
 	float moveX = 0.0f;

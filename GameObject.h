@@ -45,6 +45,7 @@ public:
     Coord virtual GetOrientation() {return m_orientation; }
     Coord virtual GetLinearVelocity() {return m_linearVelocity; }
     Coord virtual GetAngularVelocity() {return m_angularVelocity; }
+	float GetScale() {return m_scale;}
 	CTexture* GetTexture() {return m_texture;}
 	CMs3dModel* GetModel() {return m_model;}
 
@@ -53,9 +54,10 @@ public:
     void virtual SetOrientation(Coord orientation) {m_orientation = orientation;}
     void virtual SetLinearVelocity(Coord linearVelocity) {m_linearVelocity = linearVelocity;}
     void virtual SetAngularVelocity(Coord angularVelocity) {m_angularVelocity = angularVelocity;}
-	void virtual SetTexture(CTexture* value) {m_texture = value;}
+	void virtual SetScale(float val) {m_scale = val;}
+	void virtual SetTexture(CTexture* val) {m_texture = val;}
 	void virtual SetTexture(std::string name) {m_texture = AssetManager::GetSingleton().GetTexture(name);}
-	void virtual SetModel(CMs3dModel* value) {m_model = value;}
+	void virtual SetModel(CMs3dModel* val) {m_model = val;}
 	void virtual SetModel(std::string name) {m_model = AssetManager::GetSingleton().GetModel(name);}
 	
 protected:
@@ -65,6 +67,7 @@ protected:
     Coord m_orientation;            // Orientation in pitch, yaw, roll
     Coord m_linearVelocity;         // Velocity of the object (updates the position in the Frame function)
     Coord m_angularVelocity;        // Angular velocity in pitch/s, yaw/s, roll/s
+	float m_scale;
 
     // Graphics
     CTexture* m_texture; 

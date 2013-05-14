@@ -14,6 +14,8 @@
 #include "Util.h"
 #include "Screen.h"
 #include "FireworkEffect.h"
+#include "ParticleSystem.h"
+#include "Firework.h"
 #include "Image2D.h"
 
 
@@ -53,9 +55,5 @@ protected:
 	Image2D* m_crosshair;
 	float m_aimSpeed;
 	GameObject* m_cannon;
-	
-	// TEMP
-	bool m_explode;
-	FireworkEffect* fireworkEffect;
     
 };

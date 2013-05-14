@@ -41,7 +41,8 @@ bool Billboard::Render(Coord position) {
 	AssetManager::GetSingleton().LoadTexture(m_texture);
 	
 	// Transform matrices to prep for model render
-	Matrix4x4 matWorld, matTrans, matRotX, matRotY;
+	Matrix4x4 matWorld, matTrans, matRotX, matRotY, matScale;
+	matScale.Scaling(m_scale);
 	Coord cameraPosition(CPipeline::GetSingleton().GetCameraX(), CPipeline::GetSingleton().GetCameraY(), CPipeline::GetSingleton().GetCameraZ());
 	Coord direction = position - cameraPosition;
     float mag = sqrt(direction.x*direction.x + direction.y*direction.y + direction.z*direction.z);
@@ -50,7 +51,7 @@ bool Billboard::Render(Coord position) {
 	matTrans.Translation(position.x, position.y, position.z);
 	matRotX.RotationX(pitch);
 	matRotY.RotationY(yaw);
-	matWorld =  matRotX * matRotY * matTrans;
+	matWorld =  matScale * matRotX * matRotY * matTrans;
 	
 	// Render Model
 	m_model->SetWorldMatrix(matWorld);
