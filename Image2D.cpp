@@ -29,20 +29,20 @@ Image2D::Image2D() :
 {
 }
 
-bool Image2D::Load()
-{
-	return true;
-}
-
-void Image2D::Render()
+bool Image2D::Render()
 {
 	Debug ("Image2D::Render called.");
 	
+	// Place texture in buffer (as needed)
+	AssetManager::GetSingleton().LoadTexture(m_texture);
+	
+	// Render the "model" in the correct location
+	
 	// Determine where to render the image
-	uint32 left		= m_x - m_width/2;
-	uint32 right	= m_y + m_height/2;
-	uint32 top		= m_x - m_width/2;
-	uint32 bottom	= m_y + m_height/2;
+	int left		= m_x - m_width/2;
+	int right		= m_x + m_width/2;
+	int top			= m_y - m_height/2;
+	int bottom		= m_y + m_height/2;
 
 	// Start DIRECT mode transfer
 	VIFDynamicDMA.StartDirect();
@@ -82,4 +82,6 @@ void Image2D::Render()
 	
 	// End the direct mode
 	VIFDynamicDMA.EndDirect();
+	
+	return true;
 }

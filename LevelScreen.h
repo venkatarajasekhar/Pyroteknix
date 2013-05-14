@@ -14,6 +14,7 @@
 #include "Util.h"
 #include "Screen.h"
 #include "FireworkEffect.h"
+#include "Image2D.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -49,6 +50,11 @@ public:
 protected:
     
     //|----------------------------Protected Data Members-----------------------|
+	Image2D* m_crosshair;
+	float m_aimSpeed;
+	GameObject* m_cannon;
+	
+	// TEMP
 	bool m_explode;
 	FireworkEffect* fireworkEffect;
     

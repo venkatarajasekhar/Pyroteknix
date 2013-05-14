@@ -18,6 +18,9 @@
 // |----------------------------------------------------------------------------|
 LevelScreen::LevelScreen() :
     Screen(),
+	m_crosshair(0),
+	m_aimSpeed(10),
+	m_cannon(0),
 	m_explode(false),
 	fireworkEffect(0)
 {
@@ -51,11 +54,12 @@ bool LevelScreen::Initialize() {
     Screen::Initialize();
 	
 	// Create game object for cannon
-	GameObject* cannon = new GameObject;
-	cannon->SetModel("cannon");
-	cannon->SetTexture("cannon");
-	cannon->SetPosition(Coord(0.0f,0.0f,0.0f));
-	m_gameObjects.push_back(cannon);
+	m_cannon = new GameObject;
+	m_cannon->SetModel("cannon");
+	m_cannon->SetTexture("cannon");
+	m_cannon->SetPosition(Coord(0.0f,0.0f,0.0f));
+	m_cannon->SetOrientation(Coord(-3.14f/4.0f,0.0f,0.0f));
+	m_gameObjects.push_back(m_cannon);
 	
 	// Create game object for base
 	GameObject* base = new GameObject;
@@ -63,6 +67,18 @@ bool LevelScreen::Initialize() {
 	base->SetTexture("base");
 	base->SetPosition(Coord(0.0f,0.0f,0.0f));
 	m_gameObjects.push_back(base);
+	
+	// Create crosshair
+	m_crosshair = new Image2D;
+	m_crosshair->SetModel("quad");
+	m_crosshair->SetTexture("crosshair");
+	m_crosshair->SetX(0);
+	m_crosshair->SetY(0);
+	m_crosshair->SetWidth(32);
+	m_crosshair->SetHeight(32);
+	m_crosshair->SetDepth(0xFFFFF0);
+	m_crosshair->SetTint(0x80,0x00,0x00,0x80);
+	m_overlayObjects.push_back(m_crosshair);
 	
 	// Create FireworkEffect for testing
 	fireworkEffect = new FireworkEffect;
@@ -87,6 +103,7 @@ bool LevelScreen::Initialize() {
 bool LevelScreen::Shutdown() {
 	Debug ("LevelScreen::Shutdown called.");
 	
+	// TEMP
 	fireworkEffect->Shutdown();
 	
 	Screen::Shutdown();
@@ -104,11 +121,26 @@ bool LevelScreen::Logic() {
 
     Screen::Logic();
 	
+	// TEMP
 	if (!m_explode)
 	{
 		fireworkEffect->Explode();
 		m_explode = true;
 	}
+	
+	// Move crosshair
+	float moveX = 0.0f;
+	float moveY = 0.0f;
+	moveX += pad[0].axes[PAD_AXIS_LX] * m_aimSpeed;
+	moveY += pad[0].axes[PAD_AXIS_LY] * m_aimSpeed;
+	m_crosshair->SetX(m_crosshair->GetX()+moveX);
+	m_crosshair->SetY(m_crosshair->GetY()+moveY);
+	
+	// Move cannon
+	Coord rotation = m_cannon->GetOrientation();
+	rotation.x += moveY*-0.003f;
+	rotation.y += moveX*-0.005f;
+	m_cannon->SetOrientation(rotation);
 
 	return true;
 }

@@ -145,19 +145,20 @@ int main(void)
 		// cannon->SetOrientation(cannon->GetOrientation()+Coord(sfRotLocalX,sfRotLocalY,0.0f));
 		// Get any camera movements
 		// Get any requested translations
-		float Strafe =   pad[0].axes[PAD_AXIS_LX];
-		float Advance =  pad[0].axes[PAD_AXIS_LY];
-		float UpDown =   (pad[0].pressures[PAD_PL1] - pad[0].pressures[PAD_PL2]);
-		// Get requested rotations
-		float YRot = pad[0].axes[PAD_AXIS_RY];
-		float XRot = pad[0].axes[PAD_AXIS_RX];
-		// Reset camera to default position if requested
-		if(pad[0].buttons & PAD_R3)
-		{
-			Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
-		}
-		// Update the Camera and viewProjection matrices
-		Pipeline.Update(Strafe, Advance, UpDown, YRot, XRot);
+		// float Strafe =   pad[0].axes[PAD_AXIS_LX];
+		// float Advance =  pad[0].axes[PAD_AXIS_LY];
+		// float UpDown =   (pad[0].pressures[PAD_PL1] - pad[0].pressures[PAD_PL2]);
+		// // Get requested rotations
+		// float YRot = pad[0].axes[PAD_AXIS_RY];
+		// float XRot = pad[0].axes[PAD_AXIS_RX];
+		// // Reset camera to default position if requested
+		// if(pad[0].buttons & PAD_R3)
+		// {
+			// Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
+		// }
+		// // Update the Camera and viewProjection matrices
+		// Pipeline.Update(Strafe, Advance, UpDown, YRot, XRot);
+		Pipeline.Update(0, 0, 0, 0, 0);
 		
 		// Logic
 		g_bLoop = gameManager->Logic();

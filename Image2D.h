@@ -15,12 +15,13 @@
 #include <stdarg.h>
 #include "Util.h"
 #include "Coord.h"
+#include "GameObject.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                              Class: Image2D                                |
 // |----------------------------------------------------------------------------|
-class Image2D
+class Image2D : public GameObject
 {
 public:
 
@@ -29,15 +30,12 @@ public:
 	// Constructor
 	Image2D();
 
-	// Set up the image
-	bool Load();
-
 	// Render Image2D to screen
-	void Render();
+	bool Render();
 	
 	// Getters
-	uint32 GetX() {return m_x;}
-	uint32 GetY() {return m_y;}
+	int GetX() {return m_x;}
+	int GetY() {return m_y;}
 	uint32 GetWidth() {return m_width;}
 	uint32 GetHeight() {return m_height;}
 	uint32 GetDepth() {return m_depth;}
@@ -47,8 +45,8 @@ public:
 	uint8 GetTintA() {return m_a; }
 	
 	// Setters
-	void SetX(uint32 val) {m_x = val;}
-	void SetY(uint32 val) {m_y = val;}
+	void SetX(int val) {m_x = val;}
+	void SetY(int val) {m_y = val;}
 	void SetSize(uint32 w, uint32 h) {m_width = w; m_height = h;}
 	void SetWidth(uint32 val) {m_width = val;}
 	void SetHeight(uint32 val) {m_height = val;}
@@ -58,14 +56,16 @@ public:
 	void SetTintG(uint8 val) {m_g = val;}
 	void SetTintB(uint8 val) {m_b = val;}
 	void SetTintA(uint8 val) {m_a = val;}
+	
+	void virtual SetTexture(std::string name) {m_texture = AssetManager::GetSingleton().GetRedAlphaTexture(name);}
 
 private:
 
     //|-----------------------------Private Data Members------------------------|
 	
 	// Positioning
-	uint32 m_x;
-	uint32 m_y;
+	int m_x;
+	int m_y;
 	uint32 m_width;
 	uint32 m_height;
 	uint32 m_depth;
