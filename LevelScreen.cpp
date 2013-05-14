@@ -20,7 +20,8 @@ LevelScreen::LevelScreen() :
     Screen(),
 	m_crosshair(0),
 	m_aimSpeed(10),
-	m_cannon(0)
+	m_cannon(0),
+	m_firework(0)
 {
 	Debug ("LevelScreen: object instantiated.");
 }
@@ -79,10 +80,10 @@ bool LevelScreen::Initialize() {
 	m_overlayObjects.push_back(m_crosshair);
 	
 	// Firework TEST
-	Firework* firework = new Firework;
-	firework->Initialize();
-	firework->SetTarget(Coord(0.0f,300.0f,-150.0f));
-	m_gameObjects.push_back(firework);
+	m_firework = new Firework;
+	m_firework->Initialize();
+	m_firework->SetTarget(Coord(0.0f,250.0f,-150.0f));
+	m_gameObjects.push_back(m_firework);
 	
 	
 	// // Create streaming particle effect for testing
@@ -142,14 +143,35 @@ bool LevelScreen::Logic() {
 	float moveY = 0.0f;
 	moveX += pad[0].axes[PAD_AXIS_LX] * m_aimSpeed;
 	moveY += pad[0].axes[PAD_AXIS_LY] * m_aimSpeed;
+	
+	// Clamp to screen bounds
+	float maxX = 300.0f;
+	float minX = -300.0f;
+	float maxY = 50.0f;
+	float minY = -250.0f;
+	if (m_crosshair->GetX()+moveX > maxX) moveX = maxX - m_crosshair->GetX();
+	if (m_crosshair->GetX()+moveX < minX) moveX = minX - m_crosshair->GetX();
+	if (m_crosshair->GetY()+moveY > maxY) moveY = maxY - m_crosshair->GetY();
+	if (m_crosshair->GetY()+moveY < minY) moveY = minY - m_crosshair->GetY();
+	
 	m_crosshair->SetX(m_crosshair->GetX()+moveX);
 	m_crosshair->SetY(m_crosshair->GetY()+moveY);
 	
 	// Move cannon
 	Coord rotation = m_cannon->GetOrientation();
-	rotation.x += moveY*-0.003f;
+	rotation.x += moveY*-0.002f;
 	rotation.y += moveX*-0.005f;
 	m_cannon->SetOrientation(rotation);
+	
+	// If button pressed, fire firework
+	if((pad[0].buttons & PAD_TRI) || (pad[0].buttons & PAD_CROSS) || (pad[0].buttons & PAD_SQUARE) || (pad[0].buttons & PAD_CIRCLE))
+	{
+		m_firework->SetTarget(Coord(
+			m_crosshair->GetX()*1.4f,
+			m_crosshair->GetY()*-1.4f+250.0f,
+			-150.0f));
+		m_firework->Fire();
+	}
 
 	return true;
 }

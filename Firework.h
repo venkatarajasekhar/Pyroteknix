@@ -15,7 +15,7 @@
 #include <list>
 #include <math.h>
 #include "Util.h"
-#include "GameObject.h"
+#include "Billboard.h"
 #include "FireworkEffect.h"
 #include "ParticleSystem.h"
 
@@ -23,7 +23,7 @@
 // |----------------------------------------------------------------------------|
 // |                        Class Definition: Firework                          |
 // |----------------------------------------------------------------------------|
-class Firework : public GameObject {
+class Firework : public Billboard {
 
 
 public:
@@ -50,7 +50,8 @@ public:
 	void virtual SetTarget(Coord val);
 	
 	// Firework
-	void Explode();
+	void virtual Explode();
+	void virtual Fire();
 
 protected:
     

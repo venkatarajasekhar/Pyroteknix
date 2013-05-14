@@ -40,7 +40,7 @@
 // |----------------------------------------------------------------------------|
 enum SCREEN {SCREEN_TITLE, SCREEN_LEVEL, NUM_SCREENS, 
     SCREEN_QUIT};
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 	
 // |----------------------------------------------------------------------------|

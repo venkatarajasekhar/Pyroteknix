@@ -17,6 +17,7 @@
 #include "ParticleSystem.h"
 #include "Firework.h"
 #include "Image2D.h"
+#include "Text.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -55,5 +56,9 @@ protected:
 	Image2D* m_crosshair;
 	float m_aimSpeed;
 	GameObject* m_cannon;
+	Firework* m_firework;
+	
+	int m_budget;
+	Text* m_budgetDisplay();
     
 };

@@ -18,11 +18,11 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 Firework::Firework() :
-    GameObject(),
+    Billboard(),
 	m_explosion(0),
 	m_trail(0),
 	m_speed(300.0f),
-	m_hasExploded(false)
+	m_hasExploded(true)
 {
 	Debug ("Firework: object instantiated.");
 }
@@ -61,9 +61,9 @@ bool Firework::Initialize() {
 	m_explosion->SetPosition(m_position);
 	m_explosion->SetInitialSpeed(100.0f);
 	m_explosion->SetParticleDrag(0.2f);
-	m_explosion->SetParticleLifetime(3.0f);
-	m_explosion->SetParticleFadeout(1.0f);
-	m_explosion->SetMaxParticles(20);
+	m_explosion->SetParticleLifetime(2.0f);
+	m_explosion->SetParticleFadeout(0.5f);
+	m_explosion->SetMaxParticles(10);
 	m_explosion->Initialize();
 	
 	// Set up trail effect
@@ -75,8 +75,8 @@ bool Firework::Initialize() {
 	m_trail->SetParticleSpawnFrequency(0.1f);
 	m_trail->SetParticleLifetime(1.0f);
 	m_trail->SetParticleFadeout(0.3f);
-	m_trail->SetMaxParticles(20);
-	m_trail->SetSpawnParticles(false);
+	m_trail->SetMaxParticles(10);
+	m_trail->SetSpawnParticles(true);
 	m_trail->Initialize();
 
 	Debug ("Firework: object initialized.");
@@ -142,7 +142,7 @@ bool Firework::Render() {
     
 	// Render self only if haven't already exploded
 	if(!m_hasExploded)
-		GameObject::Render();
+		Billboard::Render();
 	
 	// Render children
 	m_explosion->Render();
@@ -179,6 +179,20 @@ void Firework::Explode() {
 	m_trail->SetSpawnParticles(false);
 
 	m_hasExploded = true;
+	
+	return;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |							     Fire()		    							|
+// |----------------------------------------------------------------------------|
+void Firework::Fire() {
+	Debug ("Firework: Fire() called.");
+	
+	m_position = Coord(0.0f,0.0f,0.0f);
+	m_trail->SetSpawnParticles(true);
+	m_hasExploded = false;
 	
 	return;
 }
