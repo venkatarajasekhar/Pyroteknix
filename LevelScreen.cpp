@@ -66,11 +66,11 @@ bool LevelScreen::Initialize() {
 	
 	// Create FireworkEffect for testing
 	fireworkEffect = new FireworkEffect;
-	fireworkEffect->SetModel("base");
-	fireworkEffect->SetTexture("base");
-	fireworkEffect->SetPosition(Coord(0.0f,100.0f,0.0f));
+	fireworkEffect->SetModel("quad");
+	fireworkEffect->SetTexture("particle_point");
+	fireworkEffect->SetPosition(Coord(0.0f,300.0f,0.0f));
 	fireworkEffect->SetInitialSpeed(100.0f);
-	fireworkEffect->SetParticleDrag(0.9f);
+	fireworkEffect->SetParticleDrag(0.2f);
 	fireworkEffect->SetParticleLifetime(3.0f);
 	fireworkEffect->SetParticleFadeout(1.0f);
 	fireworkEffect->SetMaxParticles(20);
@@ -104,9 +104,12 @@ bool LevelScreen::Logic() {
 
     Screen::Logic();
 	
-	//if (!m_explode)
-	//	fireworkEffect->Explode();
-	
+	if (!m_explode)
+	{
+		fireworkEffect->Explode();
+		m_explode = true;
+	}
+
 	return true;
 }
 

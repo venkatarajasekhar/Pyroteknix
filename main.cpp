@@ -124,14 +124,6 @@ int main(void)
 	// Set up game manager
 	GameManager* gameManager = new GameManager;
 	gameManager->Initialize();
-	
-	// // Set up Title Screen
-	// TitleScreen* titleScreen = new TitleScreen;
-	// titleScreen->Initialize();
-	
-	// Load the font bitmap and data
-	// TODO: Text game object, rendered at overlay stage in scene
-	// TODO: Image game object, rendered at overlay stage in scene
 		
 	// The main Render loop -------------------------------------------------------
 	while(g_bLoop)

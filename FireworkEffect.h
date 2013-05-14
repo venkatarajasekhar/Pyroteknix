@@ -66,6 +66,8 @@ public:
     void SetParticleLifetime(float val) { m_particleLifetime = val; }
     void SetParticleFadeout(float val) { m_particleFadeout = val; }
     void SetMaxParticles(int val) { m_maxParticles = val; }
+	
+	void virtual SetTexture(std::string name) {m_texture = AssetManager::GetSingleton().GetRedAlphaTexture(name);}
     
     void SetTint(float r, float g, float b, float a = 1.0f) {
         m_tintR = r;
@@ -100,6 +102,7 @@ protected:
     float m_particleLifetime;
 	float m_particleFadeout;
     int m_maxParticles;
+	float m_gravity;
 
     // Particle management data members
     float m_accumulatedTime;

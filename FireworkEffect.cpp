@@ -32,9 +32,9 @@ FireworkEffect::FireworkEffect() :
     m_particleFadeout(0.0f),
     m_particleLifetime(0.0f),
     m_maxParticles(0),
+	m_gravity(1.5f),
     m_accumulatedTime(0.0f),
-    m_frameTime(0.0f),
-    m_particles(0)
+    m_frameTime(0.0f)
 {
 	Debug ("FireworkEffect: object instantiated.");
 }
@@ -176,7 +176,8 @@ void FireworkEffect::UpdateParticles() {
     for (it=m_particles.begin(); it!=m_particles.end(); ++it)
     {
 		// Edit particle velocity based on system drag
-		it->velocity *= (1 - (1 - m_particleDrag) * m_frameTime);
+		it->velocity *= (1 - (m_particleDrag) * m_frameTime);
+		it->velocity.y -= m_gravity;
 		
         // Move particle based on velocity
         it->position += it->velocity * m_frameTime;
