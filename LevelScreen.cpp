@@ -21,7 +21,12 @@ LevelScreen::LevelScreen() :
 	m_crosshair(0),
 	m_aimSpeed(10),
 	m_cannon(0),
-	m_firework(0)
+	m_firework(0),
+	m_budget(0),
+	m_costCross(0),
+	m_cooldown(0.0f),
+	m_accumulatedTime(0.0f),
+	m_budgetDisplay(0)
 {
 	Debug ("LevelScreen: object instantiated.");
 }
@@ -85,32 +90,40 @@ bool LevelScreen::Initialize() {
 	m_firework->SetTarget(Coord(0.0f,250.0f,-150.0f));
 	m_gameObjects.push_back(m_firework);
 	
+	// Firework costs setup
+	m_budget = 2500;
+	m_costCross = 60;
+	m_cooldown = 1.0f;
+	m_accumulatedTime = 0.0f;
+	m_budgetDisplay = new Text;
+	m_budgetDisplay->SetFont("defaultFont");
+	m_budgetDisplay->SetTexture("defaultFont");
+	char buffer [50];
+	sprintf (buffer, "Budget: $%d", m_budget);
+	m_budgetDisplay->SetString(buffer);
+	m_budgetDisplay->SetPosition(Coord(150.0f,170.0f,0.0f));
+	m_overlayObjects.push_back(m_budgetDisplay);
 	
-	// // Create streaming particle effect for testing
-	// ParticleSystem* particles = new ParticleSystem;
-	// particles->SetModel("quad");
-	// particles->SetTexture("particle_point");
-	// particles->SetPosition(Coord(0.0f,0.0f,0.0f));
-	// particles->SetLinearVelocity(Coord(0.0f,100.0f,-50.0f));
-	// particles->SetParticleVelocityVariation(Coord(30.0f,30.0f,30.0f));
-	// particles->SetParticleSpawnFrequency(0.1f);
-	// particles->SetParticleLifetime(1.0f);
-	// particles->SetParticleFadeout(0.3f);
-	// particles->SetMaxParticles(20);
-	// //particles->SetScale(5.0f);
-	// m_gameObjects.push_back(particles);
+	// Cost display
+	Image2D* costs = new Image2D;
+	costs->SetModel("quad");
+	costs->SetTexture(AssetManager::GetSingleton().GetBlackTransparentTexture("controls"));
+	costs->SetX(-250);
+	costs->SetY(170);
+	costs->SetWidth(128);
+	costs->SetHeight(128);
+	costs->SetDepth(0xFFFFF1);
+	costs->SetTint(0x80,0x80,0x80,0x80);
+	m_overlayObjects.push_back(costs);
+	// Cross Cost
+	Text* crossCost = new Text;
+	crossCost->SetFont("defaultFont");
+	crossCost->SetTexture("defaultFont");
+	sprintf (buffer, "$%d", m_costCross);
+	crossCost->SetString(buffer);
+	crossCost->SetPosition(Coord(-265.0f,210.0f,0.0f));
+	m_overlayObjects.push_back(crossCost);
 	
-	// // Create FireworkEffect for testing
-	// fireworkEffect = new FireworkEffect;
-	// fireworkEffect->SetModel("quad");
-	// fireworkEffect->SetTexture("particle_point");
-	// fireworkEffect->SetPosition(Coord(0.0f,300.0f,0.0f));
-	// fireworkEffect->SetInitialSpeed(100.0f);
-	// fireworkEffect->SetParticleDrag(0.2f);
-	// fireworkEffect->SetParticleLifetime(3.0f);
-	// fireworkEffect->SetParticleFadeout(1.0f);
-	// fireworkEffect->SetMaxParticles(20);
-	// m_gameObjects.push_back(fireworkEffect);
 
 	Debug ("LevelScreen: object initialized.");
 	return true;
@@ -138,6 +151,9 @@ bool LevelScreen::Logic() {
 
     Screen::Logic();
 	
+	// Update time
+	m_accumulatedTime += 1.0f / 40.0f;
+	
 	// Move crosshair
 	float moveX = 0.0f;
 	float moveY = 0.0f;
@@ -162,15 +178,31 @@ bool LevelScreen::Logic() {
 	rotation.x += moveY*-0.002f;
 	rotation.y += moveX*-0.005f;
 	m_cannon->SetOrientation(rotation);
-	
-	// If button pressed, fire firework
-	if((pad[0].buttons & PAD_TRI) || (pad[0].buttons & PAD_CROSS) || (pad[0].buttons & PAD_SQUARE) || (pad[0].buttons & PAD_CIRCLE))
-	{
-		m_firework->SetTarget(Coord(
+	Coord fireworkTarget = Coord(
 			m_crosshair->GetX()*1.4f,
 			m_crosshair->GetY()*-1.4f+250.0f,
-			-150.0f));
+			-150.0f);
+	
+	// If button pressed and time greater than cooldown, fire firework
+	if( 	( (pad[0].buttons & PAD_TRI) || (pad[0].buttons & PAD_CROSS) || (pad[0].buttons & PAD_SQUARE) || (pad[0].buttons & PAD_CIRCLE) )
+		&&   ( m_budget >= m_costCross )
+		&&   (m_accumulatedTime > m_cooldown)
+		&&	 (m_firework->HasExploded())
+	)
+	{
+		// Fire firework
 		m_firework->Fire();
+		m_firework->SetTarget(fireworkTarget);
+		
+		// Start cooldown
+		m_accumulatedTime = 0.0f;
+		
+		// Deduct from budget
+		m_budget -= m_costCross;
+		char buffer [50];
+		sprintf (buffer, "Budget: $%d", m_budget);
+		m_budgetDisplay->SetString(buffer);
+		
 	}
 
 	return true;

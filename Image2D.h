@@ -58,6 +58,7 @@ public:
 	void SetTintA(uint8 val) {m_a = val;}
 	
 	void virtual SetTexture(std::string name) {m_texture = AssetManager::GetSingleton().GetRedAlphaTexture(name);}
+	void virtual SetTexture(CTexture* val) {m_texture = val;}
 
 private:
 

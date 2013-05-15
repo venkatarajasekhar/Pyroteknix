@@ -11,6 +11,7 @@
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
+#include <string>
 #include "Util.h"
 #include "Screen.h"
 #include "FireworkEffect.h"
@@ -59,6 +60,9 @@ protected:
 	Firework* m_firework;
 	
 	int m_budget;
-	Text* m_budgetDisplay();
+	int m_costCross;
+	float m_cooldown;
+	float m_accumulatedTime;
+	Text* m_budgetDisplay;
     
 };

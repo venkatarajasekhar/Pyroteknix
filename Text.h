@@ -41,6 +41,10 @@ public:
 	void virtual SetFont(std::string name) {m_font = AssetManager::GetSingleton().GetFont(name);}
 	void virtual SetTexture(CTexture* value) {m_fontTexture = value;}
 	void virtual SetTexture(std::string name) {m_fontTexture = AssetManager::GetSingleton().GetRedAlphaTexture(name);}
+	void virtual SetString(std::string name) {m_string = name;}
+	
+	// Getters
+	string virtual GetString() {return m_string;}
 	
 protected:
     

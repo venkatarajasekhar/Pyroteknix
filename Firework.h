@@ -52,6 +52,7 @@ public:
 	// Firework
 	void virtual Explode();
 	void virtual Fire();
+	bool virtual HasExploded() { return m_hasExploded; }
 
 protected:
     
