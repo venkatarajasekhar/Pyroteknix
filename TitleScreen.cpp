@@ -64,12 +64,23 @@ bool TitleScreen::Initialize() {
 	base->SetPosition(Coord(0.0f,0.0f,0.0f));
 	m_gameObjects.push_back(base);
 	
+	// Set up backdrop
+	Image2D* image = new Image2D;
+	CTexture* texture = AssetManager::GetSingleton().GetTexture("backdrop");
+	image->SetTexture(texture);
+	image->SetWidth(1024);
+	image->SetHeight(1024);
+	image->SetDepth(0x0000FF);
+	m_gameObjects.push_back(image);
+	
 	// Set up Title image
-	m_titleTextTexture = AssetManager::GetSingleton().GetRedAlphaTexture("titleText");
-	m_titleTextImage = new Image2D;
-	m_titleTextImage->SetWidth(512);
-	m_titleTextImage->SetHeight(512);
-	m_titleTextImage->SetDepth(0x00000F);
+	image = new Image2D;
+	texture = AssetManager::GetSingleton().GetRedAlphaTexture("titleText");
+	image->SetTexture(texture);
+	image->SetWidth(512);
+	image->SetHeight(512);
+	image->SetDepth(0x000FFF);
+	m_gameObjects.push_back(image);
 
 	Debug ("TitleScreen: object initialized.");
 	return true;
@@ -111,12 +122,6 @@ bool TitleScreen::Logic() {
 // |----------------------------------------------------------------------------|
 bool TitleScreen::Render() {
 	Debug ("TitleScreen::Render() called.");
-	
-	// Place texture in buffer (as needed)
-	AssetManager::GetSingleton().LoadTexture(m_titleTextTexture);
-	
-	// Render title image
-	m_titleTextImage->Render();
 
     Screen::Render();
 

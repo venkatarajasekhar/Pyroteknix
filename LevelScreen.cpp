@@ -67,6 +67,15 @@ bool LevelScreen::Initialize() {
     // Initialize parent class
     Screen::Initialize();
 	
+	// Set up backdrop
+	Image2D* backdrop = new Image2D;
+	CTexture* backdropTexture = AssetManager::GetSingleton().GetTexture("backdrop");
+	backdrop->SetTexture(backdropTexture);
+	backdrop->SetWidth(1024);
+	backdrop->SetHeight(1024);
+	backdrop->SetDepth(0x0000FF);
+	m_gameObjects.push_back(backdrop);
+	
 	// Create game object for cannon
 	m_cannon = new GameObject;
 	m_cannon->SetModel("cannon");
