@@ -35,6 +35,9 @@ public:
 	
 	// Put texture on buffer
 	void LoadTexture(CTexture* texture, int target=0);
+	
+	// Process Audio (call every frame)
+	void ProcessAudio() { m_DSP1.HandleAudio(); }
 
     // Getters
     CTexture* GetTexture(std::string name, bool blackTransparent = false, bool redAsAlpha = false);
@@ -42,6 +45,7 @@ public:
     CTexture* GetRedAlphaTexture(std::string name);
     CMs3dModel* GetModel(std::string name);
 	CFont* GetFont(std::string name);
+	AudioDevice* GetAudioDevice() { return &m_DSP1; }
 
 private:
 
@@ -62,6 +66,9 @@ private:
 	CTexture* m_loadedTexture2;
 	CTexture* m_selectedTexture;
 	int m_lastUsed;
+	
+	// Audio
+	AudioDevice m_DSP1;
 
 };
 

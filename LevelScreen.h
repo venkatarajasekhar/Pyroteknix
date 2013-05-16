@@ -33,7 +33,6 @@ public:
 
 	// Constructors and Destructors
 	LevelScreen();
-	LevelScreen(const LevelScreen&);
 	virtual ~LevelScreen();
 
     // Initialization and shutdown
@@ -84,6 +83,19 @@ protected:
 	// Time
 	float m_timeRemaining;
 	Text* m_timeDisplay;
+	
+	// Win/Loss Dialogue
+	bool m_gameover;
+	bool m_won;
+	Text* m_winDialogue;
+	Text* m_lossDialogue;
+	
+	// Audio
+	SoundSample m_cannonSound;
+	SoundSample m_fireworkSound;
+	
+	// Screen Flash
+	Image2D* m_flash;
     
 };
 

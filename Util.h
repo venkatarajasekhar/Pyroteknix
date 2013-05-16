@@ -35,6 +35,7 @@
 #include "timer.h"
 #include "ms3dmodel.h"
 #include "terrain.h"
+#include "audio.h"
 
 // |----------------------------------------------------------------------------|
 // |                                Constants                                   |

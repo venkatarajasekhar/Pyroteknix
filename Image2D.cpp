@@ -33,6 +33,8 @@ bool Image2D::Render()
 {
 	Debug ("Image2D::Render called.");
 	
+	if (!m_active) return true;
+	
 	// Place texture in buffer (as needed)
 	AssetManager::GetSingleton().LoadTexture(m_texture);
 	

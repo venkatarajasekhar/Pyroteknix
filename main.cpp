@@ -84,10 +84,20 @@ int main(void)
 	Pipeline.SetLight2(Vector4(-1.0f,-0.2f, 0.0f, 0.0f), Vector4(0.0f,128.0f,0.0f,0.0f));
 	Pipeline.SetLight3(Vector4( 0.0f, 0.0f,-1.0f, 0.0f), Vector4(0.0f,0.0f,128.0f,0.0f));
 	//                            Colour
-	Pipeline.SetAmbient(Vector4(30.0f,30.0f,30.0f,0.0f));
+	Pipeline.SetAmbient(Vector4(10.0f,10.0f,10.0f,0.0f));
+	
+	// Terrain to render
+	CTerrain Terrain;
 	
 	// Performance timer - call after SPS2Manager.Initialise()
 	CTimer Timer;
+	
+	// Set up audio devices
+	AudioDevice DSP0(0);
+	// Set up music in sound buffer 0
+	SoundSample music("go_cart", &DSP0);
+	// Play the music!
+	music.Play();
 	
 	// Initialise control pad 0
 	if(!pad_init(PAD_0, PAD_INIT_LOCK | PAD_INIT_ANALOGUE | PAD_INIT_PRESSURE))
@@ -121,6 +131,9 @@ int main(void)
 	AssetManager assetManager;
 	assetManager.Initialize();
 	
+	// Terrain texture
+	CTexture* terrainTexture = assetManager.GetTexture("terrain");
+	
 	// Set up game manager
 	GameManager* gameManager = new GameManager;
 	gameManager->Initialize();
@@ -128,43 +141,32 @@ int main(void)
 	// The main Render loop -------------------------------------------------------
 	while(g_bLoop)
 	{
-  		
+		
+		// Process Audio
+		DSP0.HandleAudio();
+		
 		VIFDynamicDMA.Fire();
 		
 		// Update Control Pad
 		pad_update(PAD_0);
-		
-		// THESE WILL BE DONE DURING LOGIC()
-		// // Rotate the cannon based on user input
-		// float sfRotLocalY = 0.0f;
-		// float sfRotLocalX = 0.0f;
-		// sfRotLocalY += pad[0].pressures[PAD_PLEFT] * 0.1f;
-		// sfRotLocalY -= pad[0].pressures[PAD_PRIGHT] * 0.1f;
-		// sfRotLocalX -= pad[0].pressures[PAD_PUP] * 0.1f;
-		// sfRotLocalX += pad[0].pressures[PAD_PDOWN] * 0.1f;
-		// cannon->SetOrientation(cannon->GetOrientation()+Coord(sfRotLocalX,sfRotLocalY,0.0f));
-		// Get any camera movements
-		// Get any requested translations
-		// float Strafe =   pad[0].axes[PAD_AXIS_LX];
-		// float Advance =  pad[0].axes[PAD_AXIS_LY];
-		// float UpDown =   (pad[0].pressures[PAD_PL1] - pad[0].pressures[PAD_PL2]);
-		// // Get requested rotations
-		// float YRot = pad[0].axes[PAD_AXIS_RY];
-		// float XRot = pad[0].axes[PAD_AXIS_RX];
-		// // Reset camera to default position if requested
-		// if(pad[0].buttons & PAD_R3)
-		// {
-			// Pipeline.PositionCamera(Vector4(0.0f, 55.0f, 80.0f, 1.0f), Vector4(0.0f, 40.0f, 0.0f, 1.0f));
-		// }
-		// // Update the Camera and viewProjection matrices
-		// Pipeline.Update(Strafe, Advance, UpDown, YRot, XRot);
 		Pipeline.Update(0, 0, 0, 0, 0);
 		
 		// Logic
 		g_bLoop = gameManager->Logic();
 	
-		// Render scene
+		// Render
 		SPS2Manager.BeginScene();
+		
+		// Render terrain
+		AssetManager::GetSingleton().LoadTexture(terrainTexture);
+		Matrix4x4 matWorld, matTrans, matScale;
+		matTrans.Translation(0.0f, -30.0f, 0.0f);
+		matScale.Scaling(20.0f);
+		matWorld =  matScale * matTrans;
+		Terrain.SetWorldMatrix(matWorld);
+		Terrain.Render();
+		
+		// Render scene
 		gameManager->Render();
 		SPS2Manager.EndScene();	
 		
@@ -172,6 +174,9 @@ int main(void)
 		//if(pad[0].pressed & PAD_TRI)SPS2Manager.ScreenShot();		
 	}
 
+	// Shutdown Audio
+	DSP0.Close();
+	
 	// Shutdown control pad
 	pad_cleanup(PAD_0);
 	

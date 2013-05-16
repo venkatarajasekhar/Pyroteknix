@@ -104,6 +104,8 @@ bool Firework::Shutdown() {
 bool Firework::Logic() {
 	Debug ("Firework: Logic() called.");
 	
+	if (!m_active) return true;
+	
 	// If we haven't exploded yet...
 	if (!m_hasExploded)
 	{
@@ -140,6 +142,8 @@ bool Firework::Logic() {
 bool Firework::Render() {
 	Debug ("Firework: Render() called.");
     
+	if (!m_active) return true;
+	
 	// Render self only if haven't already exploded
 	if(!m_hasExploded)
 		Billboard::Render();

@@ -20,7 +20,8 @@ AssetManager::AssetManager() :
 	m_loadedTexture1(0),
 	m_loadedTexture2(0),
 	m_selectedTexture(0),
-	m_lastUsed(1)
+	m_lastUsed(1),
+	m_DSP1(1)
 {
 }
 
@@ -80,6 +81,9 @@ void AssetManager::Shutdown()
     m_redAlphaTextures.clear();
     m_models.clear();
     m_fonts.clear();
+	
+	// Shutdown Audio
+	m_DSP1.Close();
 	
 	Debug ("AssetManager: object shut down.");
 	

@@ -21,6 +21,7 @@ OBJS = 	main.o \
 		vumanager.o \
 		ms3dmodel.o \
 		terrain.o \
+		audio.o \
 		Util.o \
 		AssetManager.o \
 		Coord.o \

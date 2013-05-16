@@ -48,6 +48,8 @@ bool Text::Initialize() {
 bool Text::Render() {
 	Debug ("Text: Render() called.");
 	
+	if (!m_active) return true;
+	
 	AssetManager::GetSingleton().LoadTexture(m_fontTexture);
 	
 	m_font->printfL(m_position.x, m_position.y, 127, 127, 127, 127, m_string.c_str());

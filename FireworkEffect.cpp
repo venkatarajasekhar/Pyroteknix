@@ -94,6 +94,8 @@ bool FireworkEffect::Shutdown() {
 bool FireworkEffect::Logic() {
 	Debug ("FireworkEffect: Logic() called.");
 	
+	if (!m_active) return true;
+	
 	// Increment the frame time.
     m_frameTime = (1.0f/40.0f);
 	
@@ -113,6 +115,8 @@ bool FireworkEffect::Logic() {
 bool FireworkEffect::Render() {
 	Debug ("FireworkEffect: Render() called.");
     
+	if (!m_active) return true;
+	
     std::list<ParticleType>::iterator it;
     for (it=m_particles.begin(); it!=m_particles.end(); ++it)
     {

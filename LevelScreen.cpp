@@ -36,17 +36,16 @@ LevelScreen::LevelScreen() :
 	m_happinessCooldown(0),
 	m_score(0),
 	m_scoreDisplay(0),
-	m_fireworkScore(0)
+	m_fireworkScore(0),
+	m_winDialogue(0),
+	m_lossDialogue(0),
+	m_gameover(false),
+	m_won(false),
+	m_cannonSound("cannon_whistle", AssetManager::GetSingleton().GetAudioDevice()),
+	m_fireworkSound("firework", AssetManager::GetSingleton().GetAudioDevice()),
+	m_flash(0)
 {
 	Debug ("LevelScreen: object instantiated.");
-}
-     
-
-// |----------------------------------------------------------------------------|
-// |							  Copy Constructor								|
-// |----------------------------------------------------------------------------|
-LevelScreen::LevelScreen(const LevelScreen&) {
-	Debug ("LevelScreen: object copied.");
 }
 
 
@@ -100,7 +99,7 @@ bool LevelScreen::Initialize() {
 	m_fireworkRange = 200.0f;
 	m_happinessCooldown = 5.0f;
 	m_happinessTime = 0.0f;
-	float peopleZ = -100.0f;
+	float peopleZ = -125.0f;
 	float peopleScale = 0.65f;
 	float startingX = -1 * m_peopleIncrementX * (m_numPeople - 1) / 2.0f;
 	for (int i = 0; i < m_numPeople; ++i )
@@ -108,7 +107,7 @@ bool LevelScreen::Initialize() {
 		person = new GameObject;
 		person->SetModel("person");
 		person->SetTexture("person_happy");
-		person->SetPosition(Coord(startingX+m_peopleIncrementX*i,0.0f,peopleZ));
+		person->SetPosition(Coord(startingX+m_peopleIncrementX*i,-10.0f,peopleZ));
 		person->SetScale(peopleScale);
 		m_gameObjects.push_back(person);
 		m_people[i] = person;
@@ -190,6 +189,37 @@ bool LevelScreen::Initialize() {
 	m_timeDisplay->SetPosition(Coord(-20.0f,-220.0f,0.0f));
 	m_overlayObjects.push_back(m_timeDisplay);
 	
+	// Dialogue background
+	
+	// Winning Dialogue
+	m_winDialogue = new Text;
+	m_winDialogue->SetFont("defaultFont");
+	m_winDialogue->SetTexture("defaultFont");
+	buffer [50];
+	sprintf (buffer, "You Win!\n\nScore: %d\n\nPress START\nto return to the title screen.", m_score);
+	m_winDialogue->SetString(buffer);
+	m_winDialogue->SetPosition(Coord(-100.0f,-150.0f,0.0f));
+	m_overlayObjects.push_back(m_winDialogue);
+	// Losing Dialogue
+	m_lossDialogue = new Text;
+	m_lossDialogue->SetFont("defaultFont");
+	m_lossDialogue->SetTexture("defaultFont");
+	buffer [50];
+	sprintf (buffer, "You Lose!\n\nScore: %d\n\nPress START\nto return to the title screen.", m_score);
+	m_lossDialogue->SetString(buffer);
+	m_lossDialogue->SetPosition(Coord(-100.0f,-150.0f,0.0f));
+	m_overlayObjects.push_back(m_lossDialogue);
+	
+	// Create screen flash
+	m_flash = new Image2D;
+	m_flash->SetModel("quad");
+	m_flash->SetTexture(AssetManager::GetSingleton().GetBlackTransparentTexture("flash"));
+	m_flash->SetWidth(1024);
+	m_flash->SetHeight(1024);
+	m_flash->SetDepth(0xFFFFFF);
+	m_flash->SetTint(0x80,0x80,0x80,0x80);
+	m_flash->Disable();
+	m_overlayObjects.push_back(m_flash);
 	Debug ("LevelScreen: object initialized.");
 	return true;
 }
@@ -215,6 +245,20 @@ bool LevelScreen::Logic() {
 	Debug ("LevelScreen::Logic() called.");
 
     Screen::Logic();
+	
+	// Disable screen flash
+	m_flash->Disable();
+	
+	// If game is over, wait for button press
+	if(m_gameover)
+	{
+		if(pad[0].buttons & PAD_START)
+		{
+			m_done = true;
+			m_nextScreen = SCREEN_TITLE;
+		}
+		return true; // Skip all other processing
+	}
 	
 	// Update time
 	m_accumulatedTime += 1.0f / 40.0f;
@@ -276,12 +320,18 @@ bool LevelScreen::Logic() {
 		m_firework->Fire();
 		m_firework->SetTarget(fireworkTarget);
 		
+		// Play sound
+		m_cannonSound.Play();
+	
+		// Enable screen flash
+		m_flash->Enable();
+		
 		// Start cooldown
 		m_accumulatedTime = 0.0f;
 		
 		// Deduct from budget
 		m_budget -= m_costCross;
-		char buffer [50];
+		buffer [50];
 		sprintf (buffer, "Budget: $%d", m_budget);
 		m_budgetDisplay->SetString(buffer);
 		
@@ -306,20 +356,24 @@ bool LevelScreen::Logic() {
 	}
 	
 	// Process happiness changes
+	int numRemainingPeople = 0;
 	for (int i = 0; i < m_numPeople; ++i )
 	{
 		if (m_happiness[i] >= 3) 
 		{
 			m_people[i]->SetTexture("person_happy");
 			m_happiness[i] = 3;
+			numRemainingPeople++;
 		}
 		if (m_happiness[i] == 2) 
 		{
 			m_people[i]->SetTexture("person_meh");
+			numRemainingPeople++;
 		}
 		if (m_happiness[i] == 1) 
 		{
 			m_people[i]->SetTexture("person_angry");
+			numRemainingPeople++;
 		}
 		if (m_happiness[i] <= 0) 
 		{
@@ -327,7 +381,28 @@ bool LevelScreen::Logic() {
 			m_happiness[i] = 0;
 		}
 	}
-
+	
+	// Determine if we've lost
+	if (!numRemainingPeople)
+	{
+		m_gameover = true;
+		buffer [50];
+		sprintf (buffer, "You Lose!\n\nScore: %d\n\nPress START\nto return to the title screen.", m_score);
+		m_lossDialogue->SetString(buffer);
+		m_lossDialogue->Enable();
+	}
+	
+	// Determine if we've won
+	if (m_timeRemaining <= 0)
+	{
+		m_gameover = true;
+		m_won = true;
+		buffer [50];
+		sprintf (buffer, "You Win!\n\nScore: %d\n\nPress START\nto return to the title screen.", m_score);
+		m_winDialogue->SetString(buffer);
+		m_winDialogue->Enable();
+	}
+	
 	return true;
 }
 
@@ -353,6 +428,31 @@ bool LevelScreen::OnLoad() {
 	// Set Camera Position
 	CPipeline::GetSingleton().PositionCamera(Vector4(0.0f, 00.0f, 400.0f, 1.0f), 23.0f * 3.14f / 180.0f, 0.0f);
 
+	// Reset game state
+	m_won = false;
+	m_gameover = false;
+	m_winDialogue->Disable();
+	m_lossDialogue->Disable();
+	
+	// Reset people and happiness
+	for (int i = 0; i < m_numPeople; ++i )
+	{
+		m_people[i]->SetTexture("person_happy");
+		m_people[i]->Enable();
+		m_happiness[i] = 3;
+	}
+	
+	// Reset score
+	m_score = 0;
+	
+	// Reset budget
+	m_budget = 2500;
+	
+	// Reset time
+	m_timeRemaining = 60;
+	m_accumulatedTime = 0;
+	m_happinessTime = 0;
+	
 	return true;
 }
 

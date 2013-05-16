@@ -98,6 +98,8 @@ bool ParticleSystem::Shutdown() {
 bool ParticleSystem::Logic() {
 	Debug ("ParticleSystem: Logic() called.");
 	
+	if (!m_active) return true;
+	
 	// Increment the frame time.
     //m_frameTime = m_timer.GetTimeDelta() / 1000;
     m_frameTime = (1.0f/40.0f);
@@ -127,6 +129,8 @@ bool ParticleSystem::Logic() {
 bool ParticleSystem::Render() {
 	Debug ("ParticleSystem: Render() called.");
     
+	if (!m_active) return true;
+	
     std::list<ParticleType>::iterator it;
     for (it=m_particles.begin(); it!=m_particles.end(); ++it)
     {

@@ -59,6 +59,7 @@ bool Screen::Shutdown()
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
          delete (*it);
     m_overlayObjects.clear();
+	
 
 	Debug ("Screen: object shutdown.");
     return result;
@@ -106,6 +107,9 @@ bool Screen::Logic()
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
          result = result && (*it)->Logic();
 	
+	// Process audio
+	AssetManager::GetSingleton().ProcessAudio();
+	
 	// Check for exit state
 	if((pad[0].buttons & PAD_START)&&(pad[0].buttons & PAD_SELECT))
 	{
@@ -126,15 +130,15 @@ bool Screen::Render()
 
     // Draw Background objects
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
-         result = result && (*it)->Render();
+        result = result && (*it)->Render();
 
     // Draw main objects
     for (std::list<GameObject*>::iterator it=m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
-         result = result && (*it)->Render();
+        result = result && (*it)->Render();
 
     // Draw Overlay
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
-         result = result && (*it)->Render();
+        result = result && (*it)->Render();
 		
 	if(DEBUG)
 	{
