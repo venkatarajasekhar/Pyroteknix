@@ -5,7 +5,8 @@
 //
 // Text
 //      Text that can be rendered to the screen
-#pragma once
+#ifndef __TEXT_H__
+#define __TEXT_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -56,3 +57,5 @@ protected:
 	CTexture* m_fontTexture;
 
 };
+
+#endif

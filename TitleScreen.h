@@ -5,7 +5,8 @@
 //
 // TitleScreen
 //      Splash screen shown at the start of the game
-#pragma once
+#ifndef __TITLESCREEN_H__
+#define __TITLESCREEN_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -54,3 +55,5 @@ protected:
 	Image2D* m_titleTextImage;
     
 };
+
+#endif

@@ -6,7 +6,8 @@
 // Firework
 //      Controls everything relating to a Firework, including particle system for 
 //		trail, explosion, trajectory, and lighting
-#pragma once
+#ifndef __FRAMEWORK_H__
+#define __FRAMEWORK_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -65,3 +66,5 @@ protected:
 	float m_speed;
 	bool m_hasExploded;
 };
+
+#endif

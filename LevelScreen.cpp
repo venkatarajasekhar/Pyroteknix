@@ -26,7 +26,17 @@ LevelScreen::LevelScreen() :
 	m_costCross(0),
 	m_cooldown(0.0f),
 	m_accumulatedTime(0.0f),
-	m_budgetDisplay(0)
+	m_budgetDisplay(0),
+	m_people(0),
+	m_happiness(0),
+	m_numPeople(0),
+	m_peopleIncrementX(0),
+	m_fireworkRange(0),
+	m_happinessTime(0),
+	m_happinessCooldown(0),
+	m_score(0),
+	m_scoreDisplay(0),
+	m_fireworkScore(0)
 {
 	Debug ("LevelScreen: object instantiated.");
 }
@@ -72,6 +82,30 @@ bool LevelScreen::Initialize() {
 	base->SetPosition(Coord(0.0f,0.0f,0.0f));
 	m_gameObjects.push_back(base);
 	
+	// Create audience objects, set up happiness
+	GameObject* person; 
+	m_numPeople = 10;
+	m_people = new GameObject*[m_numPeople];
+	m_happiness = new int[m_numPeople];
+	m_peopleIncrementX = 60.0f;
+	m_fireworkRange = 200.0f;
+	m_happinessCooldown = 5.0f;
+	m_happinessTime = 0.0f;
+	float peopleZ = -100.0f;
+	float peopleScale = 0.65f;
+	float startingX = -1 * m_peopleIncrementX * (m_numPeople - 1) / 2.0f;
+	for (int i = 0; i < m_numPeople; ++i )
+	{
+		person = new GameObject;
+		person->SetModel("person");
+		person->SetTexture("person_happy");
+		person->SetPosition(Coord(startingX+m_peopleIncrementX*i,0.0f,peopleZ));
+		person->SetScale(peopleScale);
+		m_gameObjects.push_back(person);
+		m_people[i] = person;
+		m_happiness[i] = 3;
+	}
+	
 	// Create crosshair
 	m_crosshair = new Image2D;
 	m_crosshair->SetModel("quad");
@@ -84,7 +118,7 @@ bool LevelScreen::Initialize() {
 	m_crosshair->SetTint(0x80,0x00,0x00,0x80);
 	m_overlayObjects.push_back(m_crosshair);
 	
-	// Firework TEST
+	// Firework setup
 	m_firework = new Firework;
 	m_firework->Initialize();
 	m_firework->SetTarget(Coord(0.0f,250.0f,-150.0f));
@@ -101,7 +135,7 @@ bool LevelScreen::Initialize() {
 	char buffer [50];
 	sprintf (buffer, "Budget: $%d", m_budget);
 	m_budgetDisplay->SetString(buffer);
-	m_budgetDisplay->SetPosition(Coord(150.0f,170.0f,0.0f));
+	m_budgetDisplay->SetPosition(Coord(150.0f,-250.0f,0.0f));
 	m_overlayObjects.push_back(m_budgetDisplay);
 	
 	// Cost display
@@ -109,7 +143,7 @@ bool LevelScreen::Initialize() {
 	costs->SetModel("quad");
 	costs->SetTexture(AssetManager::GetSingleton().GetBlackTransparentTexture("controls"));
 	costs->SetX(-250);
-	costs->SetY(170);
+	costs->SetY(-200);
 	costs->SetWidth(128);
 	costs->SetHeight(128);
 	costs->SetDepth(0xFFFFF1);
@@ -121,10 +155,32 @@ bool LevelScreen::Initialize() {
 	crossCost->SetTexture("defaultFont");
 	sprintf (buffer, "$%d", m_costCross);
 	crossCost->SetString(buffer);
-	crossCost->SetPosition(Coord(-265.0f,210.0f,0.0f));
+	crossCost->SetPosition(Coord(-265.0f,-160.0f,0.0f));
 	m_overlayObjects.push_back(crossCost);
-	
 
+	// Score
+	m_score = 0;
+	m_fireworkScore = 10;
+	m_scoreDisplay = new Text;
+	m_scoreDisplay->SetFont("defaultFont");
+	m_scoreDisplay->SetTexture("defaultFont");
+	buffer [50];
+	sprintf (buffer, "Score: %d", m_score);
+	m_scoreDisplay->SetString(buffer);
+	m_scoreDisplay->SetPosition(Coord(-20.0f,-250.0f,0.0f));
+	m_overlayObjects.push_back(m_scoreDisplay);
+	
+	// Timer
+	m_timeRemaining = 60;
+	m_timeDisplay = new Text;
+	m_timeDisplay->SetFont("defaultFont");
+	m_timeDisplay->SetTexture("defaultFont");
+	buffer [50];
+	sprintf (buffer, "Time: %d", ((int)m_timeRemaining));
+	m_timeDisplay->SetString(buffer);
+	m_timeDisplay->SetPosition(Coord(-20.0f,-220.0f,0.0f));
+	m_overlayObjects.push_back(m_timeDisplay);
+	
 	Debug ("LevelScreen: object initialized.");
 	return true;
 }
@@ -153,6 +209,11 @@ bool LevelScreen::Logic() {
 	
 	// Update time
 	m_accumulatedTime += 1.0f / 40.0f;
+	m_happinessTime += 1.0f / 40.0f;
+	m_timeRemaining -= 1.0f / 40.0f;
+	char buffer [50];
+	sprintf (buffer, "Time: %d", ((int)m_timeRemaining));
+	m_timeDisplay->SetString(buffer);
 	
 	// Move crosshair
 	float moveX = 0.0f;
@@ -183,6 +244,18 @@ bool LevelScreen::Logic() {
 			m_crosshair->GetY()*-1.4f+250.0f,
 			-150.0f);
 	
+	// Decay happiness if it's time
+	if (m_happinessTime > m_happinessCooldown)
+	{
+		// Start cooldown
+		m_happinessTime = 0.0f;
+		
+		for (int i = 0; i < m_numPeople; ++i )
+		{
+			m_happiness[i]--;
+		}
+	}
+	
 	// If button pressed and time greater than cooldown, fire firework
 	if( 	( (pad[0].buttons & PAD_TRI) || (pad[0].buttons & PAD_CROSS) || (pad[0].buttons & PAD_SQUARE) || (pad[0].buttons & PAD_CIRCLE) )
 		&&   ( m_budget >= m_costCross )
@@ -203,6 +276,47 @@ bool LevelScreen::Logic() {
 		sprintf (buffer, "Budget: $%d", m_budget);
 		m_budgetDisplay->SetString(buffer);
 		
+		// Gain points based on happiness and firework value
+		float fireworkX = fireworkTarget.x;
+		float startingX = -1 * m_peopleIncrementX * (m_numPeople - 1) / 2.0f;
+		for (int i = 0; i < m_numPeople; ++i )
+		{
+			if (m_happiness[i] < 0) continue; // skip processing this person if they have already left
+			
+			float personX = startingX+m_peopleIncrementX*i;
+			if (personX > (fireworkX - m_fireworkRange) && personX < (fireworkX + m_fireworkRange) )
+			{
+				m_score += m_fireworkScore * m_happiness[i]++; // ALSO applise happiness to person, AFTER score calculated
+			}
+		}
+		// Update score display
+		buffer [50];
+		sprintf (buffer, "Score: %d", m_score);
+		m_scoreDisplay->SetString(buffer);
+		
+	}
+	
+	// Process happiness changes
+	for (int i = 0; i < m_numPeople; ++i )
+	{
+		if (m_happiness[i] >= 3) 
+		{
+			m_people[i]->SetTexture("person_happy");
+			m_happiness[i] = 3;
+		}
+		if (m_happiness[i] == 2) 
+		{
+			m_people[i]->SetTexture("person_meh");
+		}
+		if (m_happiness[i] == 1) 
+		{
+			m_people[i]->SetTexture("person_angry");
+		}
+		if (m_happiness[i] <= 0) 
+		{
+			m_people[i]->Disable();
+			m_happiness[i] = 0;
+		}
 	}
 
 	return true;

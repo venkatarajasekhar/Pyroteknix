@@ -7,7 +7,8 @@
 //      Coord is a coordinate set (x,y,z) which measures the position of 
 //      something in the game world. The data members for this class will be 
 //      public, like a struct.
-#pragma once
+#ifndef __COORD_H__
+#define __COORD_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -56,3 +57,5 @@ public:
     float x, y, z;
 
 };
+
+#endif

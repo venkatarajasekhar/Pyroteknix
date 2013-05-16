@@ -5,7 +5,8 @@
 //
 // LevelScreen
 //      Screen containing a game level
-#pragma once
+#ifndef __LEVELSCREEN_H__
+#define __LEVELSCREEN_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -59,10 +60,31 @@ protected:
 	GameObject* m_cannon;
 	Firework* m_firework;
 	
+	// Audience and happiness
+	GameObject** m_people;
+	int* m_happiness;			// Happiness ranges: 0 - leaving; 1 - angry; 2 - meh; 3 - happy
+	int m_numPeople;
+	float m_peopleIncrementX;
+	float m_fireworkRange;
+	float m_happinessCooldown;
+	float m_happinessTime;
+	
+	// Cost and budget
 	int m_budget;
 	int m_costCross;
 	float m_cooldown;
 	float m_accumulatedTime;
 	Text* m_budgetDisplay;
+	
+	// Score
+	int m_score;
+	Text* m_scoreDisplay;
+	int m_fireworkScore;
+	
+	// Time
+	float m_timeRemaining;
+	Text* m_timeDisplay;
     
 };
+
+#endif

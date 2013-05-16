@@ -134,8 +134,7 @@ void FireworkEffect::Explode() {
     float angle = 0;
 	float angleInc = 2*3.14 / m_maxParticles;
 	
-	
-	while((m_particles.size() < (m_maxParticles)))
+	for (int i = 0; i < m_maxParticles; ++i)
     {
 		// Increment angle at which particle will be fired
 		angle += angleInc;

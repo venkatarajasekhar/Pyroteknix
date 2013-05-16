@@ -5,7 +5,8 @@
 //
 // GameManager
 //      Manages game screens and game logic within those screens.
-#pragma once
+#ifndef __GAMEMANAGER_H__
+#define __GAMEMANAGER_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -57,3 +58,5 @@ private:
     Screen** m_screens;
 
 };
+
+#endif

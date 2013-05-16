@@ -6,7 +6,8 @@
 // GameObject
 //      Abstract class for game all objects. Contains models, evaluates basic physics 
 //      and executes other behaviour logic, sends render request to renderer.
-#pragma once
+#ifndef __GAMEOBJECT_H__
+#define __GAMEOBJECT_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -59,6 +60,8 @@ public:
 	void virtual SetTexture(std::string name) {m_texture = AssetManager::GetSingleton().GetTexture(name);}
 	void virtual SetModel(CMs3dModel* val) {m_model = val;}
 	void virtual SetModel(std::string name) {m_model = AssetManager::GetSingleton().GetModel(name);}
+	void virtual Disable() {m_active = false;}
+	void virtual Enable() {m_active = true;}
 	
 protected:
     
@@ -68,9 +71,12 @@ protected:
     Coord m_linearVelocity;         // Velocity of the object (updates the position in the Frame function)
     Coord m_angularVelocity;        // Angular velocity in pitch/s, yaw/s, roll/s
 	float m_scale;
+	bool m_active;
 
     // Graphics
     CTexture* m_texture; 
 	CMs3dModel* m_model;
 
 };
+
+#endif

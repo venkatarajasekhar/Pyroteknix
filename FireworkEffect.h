@@ -5,7 +5,8 @@
 //
 // FireworkEffect
 //      Manages a set of particles, emitted and handled based on set parameters
-#pragma once
+#ifndef __FIREWORKEFFECT_H__
+#define __FIREWORKEFFECT_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -109,3 +110,5 @@ protected:
 	float m_frameTime;
     std::list<ParticleType> m_particles;
 };
+
+#endif

@@ -5,7 +5,8 @@
 //
 // ParticleSystem
 //      Manages a set of particles, emitted and handled based on set parameters
-#pragma once
+#ifndef __PARTICLESYSTEM_H__
+#define __PARTICLESYSTEM_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -112,3 +113,5 @@ protected:
 	CTimer m_timer;
     std::list<ParticleType> m_particles;
 };
+
+#endif

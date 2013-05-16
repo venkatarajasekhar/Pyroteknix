@@ -6,7 +6,8 @@
 // Screen
 //      Abstract class for screens. Contains game objects, executes their game
 //      logic.
-#pragma once
+#ifndef __SCREEN_H__
+#define __SCREEN_H__
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
@@ -79,3 +80,5 @@ protected:
 	float m_fps;
 
 };
+
+#endif

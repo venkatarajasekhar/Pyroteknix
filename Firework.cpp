@@ -76,7 +76,7 @@ bool Firework::Initialize() {
 	m_trail->SetParticleLifetime(1.0f);
 	m_trail->SetParticleFadeout(0.3f);
 	m_trail->SetMaxParticles(10);
-	m_trail->SetSpawnParticles(true);
+	m_trail->SetSpawnParticles(false);
 	m_trail->Initialize();
 
 	Debug ("Firework: object initialized.");

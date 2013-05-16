@@ -5,7 +5,8 @@
 //
 // AssetManager
 //      Manages loading and unloading assets including textures and models
-#pragma once
+#ifndef __ASSETMANAGER_H__
+#define __ASSETMANAGER_H__
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
@@ -63,3 +64,5 @@ private:
 	int m_lastUsed;
 
 };
+
+#endif

@@ -18,7 +18,8 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 GameObject::GameObject() :
-	m_scale(1.0f)
+	m_scale(1.0f),
+	m_active(true)
 {
 	Debug("GameObject: object instantiated.");
 }
@@ -65,6 +66,11 @@ bool GameObject::Render() {
 	{
 		Debug ("GameObject: ERROR - no model.");
 		return false;
+	}
+	
+	if (!m_active)
+	{
+		return true;
 	}
 
 	// Place texture in buffer (as needed)

@@ -5,7 +5,8 @@
 //
 // Util
 //      Game-wide utilities.
-#pragma once
+#ifndef __UTIL_H__
+#define __UTIL_H__
 
 // |----------------------------------------------------------------------------|
 // |                            Framework Includes                              |
@@ -48,3 +49,5 @@ const bool DEBUG = false;
 // |----------------------------------------------------------------------------|
 void Debug(const char * strText, ...);
 float Clamp(float val, float min, float max);
+
+#endif

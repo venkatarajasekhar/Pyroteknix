@@ -5,7 +5,8 @@
 //
 // Billboard
 //      Special game object that automatically orients itself to face the camera
-#pragma once
+#ifndef __BILLBOARD_H__
+#define __BILLBOARD_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -35,3 +36,5 @@ public:
     bool virtual Render(Coord position);
 
 };
+
+#endif

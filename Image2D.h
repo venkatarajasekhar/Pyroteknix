@@ -5,7 +5,8 @@
 //
 // Image2D
 //      Contains model data for a 2D image, renders it to screen.
-#pragma once
+#ifndef __IMAGE2D_H__
+#define __IMAGE2D_H__
 
 
 // |----------------------------------------------------------------------------|
@@ -78,3 +79,5 @@ private:
 	uint8 m_a;
 	
 };
+
+#endif
