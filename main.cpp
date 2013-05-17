@@ -106,6 +106,7 @@ int main(void)
 		pad_cleanup(PAD_0);
 		exit(0);
 	}	
+	enable_actuator(0, 1, 1);
 	
 	// Initialise the VU1 manager class
 	CVU1MicroProgram VU1MicroCode(&VU_vu1code_start, &VU_vu1code_end);
@@ -178,6 +179,7 @@ int main(void)
 	DSP0.Close();
 	
 	// Shutdown control pad
+	set_actuator(0, 0, 0);
 	pad_cleanup(PAD_0);
 	
 	// Shutdown game manager

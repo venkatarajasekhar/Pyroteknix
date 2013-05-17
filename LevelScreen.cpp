@@ -268,6 +268,10 @@ bool LevelScreen::Logic() {
 	sprintf (buffer, "Time: %d", ((int)m_timeRemaining));
 	m_timeDisplay->SetString(buffer);
 	
+	// Disable vibration if it's time
+	if (m_accumulatedTime > 0.2f)
+		set_actuator(0, 0, 0);
+	
 	// Move crosshair
 	float moveX = 0.0f;
 	float moveY = 0.0f;
@@ -319,6 +323,9 @@ bool LevelScreen::Logic() {
 		// Fire firework
 		m_firework->Fire();
 		m_firework->SetTarget(fireworkTarget);
+		
+		// Vibrate controller
+		set_actuator(0, 1, 255);
 		
 		// Play sound
 		m_cannonSound.Play();
