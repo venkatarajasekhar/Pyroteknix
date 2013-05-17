@@ -80,11 +80,11 @@ int main(void)
 	// Initialise Lighting
 	// Three lights and Ambient light
 	//							Direction vector				  Colour	
-	Pipeline.SetLight1(Vector4( 1.0f, 0.2f, 0.0f, 0.0f), Vector4(128.0f,128.0f,128.0f,0.0f));
-	Pipeline.SetLight2(Vector4(-1.0f,-0.2f, 0.0f, 0.0f), Vector4(0.0f,128.0f,0.0f,0.0f));
-	Pipeline.SetLight3(Vector4( 0.0f, 0.0f,-1.0f, 0.0f), Vector4(0.0f,0.0f,128.0f,0.0f));
+	Pipeline.SetLight1(Vector4( 0.0f, 0.5f, -1.0f, 0.0f),  Vector4( 0.0f, 0.0f, 128.0f, 0.0f));
+	Pipeline.SetLight2(Vector4( 1.0f, -0.5f, -1.0f, 0.0f),  Vector4( 0.0f, 128.0f, 0.0f, 0.0f));
+	Pipeline.SetLight3(Vector4( -1.0f, -0.5f, -1.0f, 0.0f), Vector4( 128.0f, 0.0f, 0.0f, 0.0f));
 	//                            Colour
-	Pipeline.SetAmbient(Vector4(10.0f,10.0f,10.0f,0.0f));
+	Pipeline.SetAmbient(Vector4(50.0f,50.0f,50.0f,50.0f));
 	
 	// Terrain to render
 	CTerrain Terrain;
@@ -106,6 +106,7 @@ int main(void)
 		pad_cleanup(PAD_0);
 		exit(0);
 	}	
+	enable_actuator(0, 1, 1);
 	
 	// Initialise the VU1 manager class
 	CVU1MicroProgram VU1MicroCode(&VU_vu1code_start, &VU_vu1code_end);
@@ -171,13 +172,14 @@ int main(void)
 		SPS2Manager.EndScene();	
 		
 		// Dump screenshot if requested
-		//if(pad[0].pressed & PAD_TRI)SPS2Manager.ScreenShot();		
+		if(pad[0].pressed & PAD_R2)SPS2Manager.ScreenShot();		
 	}
 
 	// Shutdown Audio
 	DSP0.Close();
 	
 	// Shutdown control pad
+	set_actuator(0, 0, 0);
 	pad_cleanup(PAD_0);
 	
 	// Shutdown game manager

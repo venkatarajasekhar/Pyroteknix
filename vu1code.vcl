@@ -100,8 +100,10 @@ loop:
     mula.xyz	acc, fLightDirs[0], Norm[x]				; "Transform" the normal by the light direction matrix
     madd.xyz	acc, fLightDirs[1], Norm[y]				; This has the effect of outputting a vector with all
     madd.xyz	fIntensities, fLightDirs[2], Norm[z]	; four intensities, one for each light.
-    mini.xyz	fIntensities, fIntensities, vf00[w]		; Clamp the intensity to 0..1
-    max.xyz		fIntensities, fIntensities, vf00[x]
+    mini.xyz	fIntensities, fIntensities, vf00[w]		; Clamp intensity to below 1
+    max.xyz		fIntensities, fIntensities, vf00[x]		; Clamp intensity to above 0
+	
+colors:
     lq.xyz		fLightCols[0], LightCols+0(vi00)		; Load the light colours
     lq.xyz		fLightCols[1], LightCols+1(vi00)
     lq.xyz		fLightCols[2], LightCols+2(vi00)
