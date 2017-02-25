@@ -47,7 +47,7 @@ private:
     //|-------------------------------Private Functions-------------------------|
     
     // Sets the current screen to the supplied screen index.
-    int ChangeScreen(SCREEN nextScreen);
+    int ChangeScreen(Screen nextScreen);
 
 private:
 
